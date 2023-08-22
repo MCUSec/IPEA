@@ -323,9 +323,9 @@ namespace{
         Value *getPtr() { return PtrUse->get(); }
     };
 
-    struct uAddressSanitizer : public FunctionPass{
+    struct IPEASan : public FunctionPass{
         static char ID;
-        uAddressSanitizer() : FunctionPass(ID) {}
+        IPEASan() : FunctionPass(ID) {}
 
         std::map<Value *, Value *> mCachedId, mCachedAddressId;
         const DataLayout *DL;
@@ -1152,7 +1152,7 @@ namespace{
                     errs() << "\n";
                 #endif
 
-                task_queue.push_back(std::bind(&uAddressSanitizer::addLoadStoreChecks, this, Operand.getInsn()));
+                task_queue.push_back(std::bind(&IPEASan::addLoadStoreChecks, this, Operand.getInsn()));
 
                 // addLoadStoreChecks(Operand.getInsn());
             }
@@ -2138,27 +2138,27 @@ namespace{
 
                 switch(I->getOpcode()){
                 case Instruction::Alloca:
-                    task_queue.push_back(std::bind(&uAddressSanitizer::handleAlloca,  this, dyn_cast<AllocaInst>(I)));
+                    task_queue.push_back(std::bind(&IPEASan::handleAlloca,  this, dyn_cast<AllocaInst>(I)));
                     break;
 
                 case Instruction::PHI:
-                    task_queue.push_back(std::bind(&uAddressSanitizer::handlePHI, this, dyn_cast<PHINode>(I)));
+                    task_queue.push_back(std::bind(&IPEASan::handlePHI, this, dyn_cast<PHINode>(I)));
                     break;
                 
                 case Instruction::Call:
-                    task_queue.push_back(std::bind(&uAddressSanitizer::handleCall, this, dyn_cast<CallInst>(I)));
+                    task_queue.push_back(std::bind(&IPEASan::handleCall, this, dyn_cast<CallInst>(I)));
                     break;
                 
                 case Instruction::Select:
-                    task_queue.push_back(std::bind(&uAddressSanitizer::handleSelect, this, dyn_cast<SelectInst>(I)));
+                    task_queue.push_back(std::bind(&IPEASan::handleSelect, this, dyn_cast<SelectInst>(I)));
                     break;
                 
                 case Instruction::Store: // this is located in the pass2
-                    task_queue.push_back(std::bind(&uAddressSanitizer::handleStore, this, dyn_cast<StoreInst>(I)));
+                    task_queue.push_back(std::bind(&IPEASan::handleStore, this, dyn_cast<StoreInst>(I)));
                     break;
                 
                 case Instruction::Ret:
-                    task_queue.push_back(std::bind(&uAddressSanitizer::handleReturnInst, this, dyn_cast<ReturnInst>(I)));
+                    task_queue.push_back(std::bind(&IPEASan::handleReturnInst, this, dyn_cast<ReturnInst>(I)));
                     break;
                 
                 default:
@@ -3105,15 +3105,15 @@ namespace{
     };
 }
 
-char uAddressSanitizer::ID = 0;
-static RegisterPass<uAddressSanitizer> X("mcu", "MCU Pass");
+char IPEASan::ID = 0;
+static RegisterPass<IPEASan> X("mcu", "MCU Pass");
 static RegisterStandardPasses Y(
     // PassManagerBuilder::EP_OptimizerLast,
     PassManagerBuilder::EP_ModuleOptimizerEarly,
     [](const PassManagerBuilder &Builder,
-       legacy::PassManagerBase &PM) { PM.add(new uAddressSanitizer()); });
+       legacy::PassManagerBase &PM) { PM.add(new IPEASan()); });
 
 static RegisterStandardPasses Z(
     PassManagerBuilder::EP_EnabledOnOptLevel0,
     [](const PassManagerBuilder &Builder,
-       legacy::PassManagerBase &PM) { PM.add(new uAddressSanitizer()); });
+       legacy::PassManagerBase &PM) { PM.add(new IPEASan()); });
