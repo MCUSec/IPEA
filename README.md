@@ -5,9 +5,32 @@ Facilitating Non-Intrusive In-Vivo Firmware Testing with Stateless Instrumentati
 ## Introduction
 Although numerous dynamic testing techniques have been developed, they can hardly be directly applied to firmware of deeply embedded (e.g., microcontroller-based) devices due to the tremendously different runtime environment and restricted resources on these devices. This work tackles these challenges by leveraging the unique position of microcontroller devices during firmware development. That is, firmware de- velopers have to rely on a powerful engineering workstation that connects to the target device to program and debug code. Therefore, we develop a decoupled firmware testing framework named IPEA, which shifts the overhead of resource-intensive analysis tasks from the microcontroller to the workstation. Only lightweight “needle probes” are left in the firmware to collect internal execution information without processing it. We also instantiated this framework with a sanitizer based on pointer capability (IPEA-San) and a feedback-guided fuzzer (IPEA-Fuzz). By comparing IPEA-San with a port of AddressSanitizer for microcontrollers, we show that IPEA-San reduces the memory overhead by 73.11% in real-world firmware with better detection accuracy. Running IPEA-Fuzz with IPEA-San, we found five new bugs in real IoT libraries and peripheral driver code.
 
-For **NDSS'24 AE**, please refer to this [documentation](docs/AE.md).
+For the details, please refer to the paper published to NDSS'24.
 
-## Directories
+## Table of Contents
+
+- [Directory Structure](#directory-structure)
+- [Environment](#environment)
+    + [Hardware](#hardware)
+    + [Host OS](#host-os)
+    + [Software and libraries](#software-and-libraries)
+- [Getting Started](#getting-started)
+    + [Install dependencies](#install-dependencies)
+    + [Build IPEA framework](#build-ipea-framework)
+- [Usage](#usage)
+    + [Taming the firmware source code](#taming-the-firmware-source-code)
+    + [Compile the firmware with IPEA-San](#compile-the-firmware-with-ipea-san)
+    + [Hardware wiring](#hardware-wiring)
+    + [Start fuzzing](#start-fuzzing)
+    + [Test a usecase](#test-a-usecase)
+- [Artifact Evaluation](#artifact-evaluation)
+  * [IPEA-San Evaluation](#ipea-san-evaluation)
+  * [IPEA-Fuzz Evaluation](#ipea-fuzz-evaluation)
+  * [Correctness Evaluation](#correctness-evaluation)
+  * [Performance Evaluation](#performance-evaluation)
+  * [Fuzz-testing FRDM-K64F USB-Host Driver](#fuzz-testing-frdm-k64f-usb-host-driver)
+
+## Directory Structure
 - ``AFL``: Source code of IPEA-Fuzz (based on AFL-2.5b)
 - ``core``: Source code of IPEA-Core and IPEA-San
 - ``compiler-plugins``: Compiler plugins
@@ -238,7 +261,14 @@ The runtime log would be saved as `tracelog_0.txt`. If a crash dected, the call 
 
 ## Artifact Evaluation
 
-We claim "**Avaliable**" and "**Functional**" badges in NDSS'24 AE. If the required hardware (e.g., J-Link Probe and evaluation board) is unavailable, please login to our AE server in which all software and hardware dependencies are in place for the evaluation.
+We claim "**Avaliable**" and "**Functional**" badges in NDSS'24 AE. If the required hardware (e.g., J-Link Probe and evaluation board) is unavailable, please login to our AE server in which all software and hardware dependencies are in place for the evaluation:
+
+```bash
+$ ssh -X ndss24@24.199.78.229         # password: ndss24
+$ ssh -X -p 2222 ndss24_ae@localhost
+```
+
+**NOTE**: X11 forwarding must be enabled. Please don't omit `-X` parameter in the command lines. For Windows and Mac users, please refer to this [instruction](docs/x11.md).
 
 ### IPEA-San Evaluation
 
