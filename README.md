@@ -5,7 +5,7 @@ Facilitating Non-Intrusive In-Vivo Firmware Testing with Stateless Instrumentati
 ## Introduction
 Although numerous dynamic testing techniques have been developed, they can hardly be directly applied to firmware of deeply embedded (e.g., microcontroller-based) devices due to the tremendously different runtime environment and restricted resources on these devices. This work tackles these challenges by leveraging the unique position of microcontroller devices during firmware development. That is, firmware de- velopers have to rely on a powerful engineering workstation that connects to the target device to program and debug code. Therefore, we develop a decoupled firmware testing framework named IPEA, which shifts the overhead of resource-intensive analysis tasks from the microcontroller to the workstation. Only lightweight “needle probes” are left in the firmware to collect internal execution information without processing it. We also instantiated this framework with a sanitizer based on pointer capability (IPEA-San) and a feedback-guided fuzzer (IPEA-Fuzz). By comparing IPEA-San with a port of AddressSanitizer for microcontrollers, we show that IPEA-San reduces the memory overhead by 73.11% in real-world firmware with better detection accuracy. Running IPEA-Fuzz with IPEA-San, we found five new bugs in real IoT libraries and peripheral driver code.
 
-For the details, please refer to the paper published to NDSS'24.
+For details, please refer to our paper published to NDSS'24.
 
 ## Table of Contents
 
@@ -137,8 +137,8 @@ package from the official [website](https://developer.arm.com/downloads/-/gnu-rm
 
 By the above steps, the following components will be built:
 
-- `ipea-san.so`: **IPEA-San** compiler plugin.
-- `libipea-rt.a`: the runtime library of **IPEA-San**. 
+- `ipea-san.so`: IPEA-San compiler plugin.
+- `libipea-rt.a`: the runtime library of IPEA-San. 
 - `ipea-unittest`: a unit testing program of **IPEA-San**. It is responsible for verifying the capability of capturing memory-related errors in the target firmware. This program will download the instrumented firmware to the target MCU and run it. An error will be returned if any memory error detected.
 
 - `ipea-fuzz`: the main program of **IPEA-Fuzz**, an AFL-based, coverage-guided fuzzer. Like fuzzing x86_64 applications on a PC, it generates test cases and feeds to the target MCU and receives code coverage feedbacks via the debug dongle (i.e., a J-Link Probe). 
