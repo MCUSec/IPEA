@@ -185,12 +185,12 @@ static uint32_t RTT_flush(const target_info_t *target_info)
 	remaining = trace_total_bytes - trace_rx_bytes;
 
 	if (unlikely(remaining < 0)) {
-		spdlog::error("RTT underflow");
+		spdlog::warn("RTT underflow");
 		goto rtt_flush_ret;
 	}
 
 	if (unlikely(trace_total_bytes > RTT_BUF_SIZE)) {
-		spdlog::error("RTT buffer overflow");
+		spdlog::warn("RTT buffer overflow");
 		goto rtt_flush_ret;
 	}
 
@@ -682,7 +682,7 @@ int RTT_Decode(const target_info_t *target_info, int exec_index, U8 *bitmap, int
 	uint32_t remainBytes = RTT_flush(target_info);
 	
 	if (remainBytes > 0) {
-		spdlog::error("{} bytes data couldn't be retrieved!", remainBytes);
+		spdlog::warn("{} bytes data couldn't be retrieved!", remainBytes);
 		return TRACE_ERR;
 	}
 
