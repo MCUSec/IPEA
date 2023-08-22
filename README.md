@@ -384,7 +384,7 @@ Juliet C/C++ Testsuite is used for evaluating the correctness of sanitizers.
   **NOTE**: This experiment may take a long time. `--max-run=10` makes the script run only 10 programs.
 
     ```bash
-    $ run_julite.py -p . -c mk64f.conf --max-run=10   # Test the correctness of IPEA-San
+    $ run_juliet.py -p . -c mk64f.conf --max-run=10   # Test the correctness of IPEA-San
     ```
 
 - Evaluate the correctness of ASan
