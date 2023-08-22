@@ -31,7 +31,7 @@ MESSAGE(STATUS "TOOLCHAIN_DIR: " ${TOOLCHAIN_DIR})
 SET(TARGET_TRIPLET "arm-none-eabi")
 SET(ARM_GCC_VERSION "9.3.1")
 
-SET(LLVM_PLUGIN "${IPEA_WORKDIR}/build/compiler-plugins/uSan/usan.so")
+SET(LLVM_PLUGIN "${IPEA_WORKDIR}/build/compiler-plugins/IPEA-San/ipea-san.so")
 
 SET(LLVM_FLAGS " \
     --target=arm-none-eabi \
