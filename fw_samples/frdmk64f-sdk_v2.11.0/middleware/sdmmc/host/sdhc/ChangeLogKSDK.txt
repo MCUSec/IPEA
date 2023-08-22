@@ -1,0 +1,38 @@
+/*!
+@page middleware_log Middleware Change Log
+
+@section host_sdhc Host SDHC driver for MCUXpresso SDK
+The current driver version is 2.4.0.
+
+  - 2.4.0
+    - Improvements
+      - Removed deprecated api in SDHC host driver.
+      - Added SDMMCHOST_ConvertDataToLittleEndian api.
+      - Added capability/maxBlockCount/maxBlockSize in host decriptior.
+      - Added mutual exclusive access for function init/deinit/transfer function.
+
+  - 2.3.2
+    - Improvements
+      - Enabled DAT3 card detect interrupt in function SDMMCHOST_PollingCardDetectStatus to support DAT3 re-detect card.
+
+  - 2.3.1
+    - Improvements
+      - Enabled DAT3 card detect feature.
+      - Added host instance capability macro.
+      - Added clear card inserted/removed event when card removed/inserted interrupt generated.
+    - Bug Fixes
+      - Fixed violations of MISRA C-2012 rule 11.9, 15.7, 4.7, 16.4, 10.1, 10.3, 10.4, 11.3, 14.4, 10.6, 17.7, 16.1, 16.3.
+
+  - 2.3.0
+    - Improvements
+      - Merged the host controller driver from polling/freertos/interrupt to non_blocking/blocking.
+      - Added SDMMC OSA layer to support muxtex access/event/delay.
+
+  - 2.2.14
+    - Bug Fixes
+      - Fixed uninitialized value Coverity issue.
+
+  - 2.0.0
+    - Initial version
+
+*/

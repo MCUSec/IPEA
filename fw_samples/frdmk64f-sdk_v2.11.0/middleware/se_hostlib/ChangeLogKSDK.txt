@@ -1,0 +1,64 @@
+
+/*!
+@page middleware_log Secure Element Change Log
+
+@section se_hostlib Secure Element hostlib for KSDK
+
+  - For Detailed change log please download the Plug & Trust MW package from
+    https://www.nxp.com/products/:SE050?tab=Design_Tools_Tab
+    and refer to the Changes Present in the User guide.
+
+  - 3.01.00
+    - Cleanup for heap management macros. Added support to redirect macros to FreeRTOS APIs.
+
+  - 3.00.03
+    - smCom_Init: return type is now *U16* instead of *void*. Return value indicates success/failure to create mutex/semophore.
+
+  - 3.00.02
+    - Fixed: potential null pointer dereference
+
+  - 2.16.00
+    - MIMXRT1050 support replaced with MIMXRT1060
+    - Examples renamed
+
+  - 2.14.00
+    - Extensively revamped ``fsl_sss_ftr.h`` file for finer control of build configuration selection.
+    - smCom Layer is refactored so that Application send down the connection handles/parameters to lower layer.
+    - Define ``T1oI2C_UM1225_SE050`` is no longer applicable, use  ``T1oI2C_UM11225_SE05X`` instead.
+
+  - 2.11.03
+    - hostlib file/folder moved
+
+  - 2.11.0
+    - Added Support for SE050 and SSS API's
+
+  - 1.6.0
+    - Host Library version goes from 01.40 to 01.41 (A71CH Host API has not been extended)
+    - Conditional translation of i2c_Failed into i2c_NoAddrAck removed (this translation is no longer required as a NACK is no longer lumped into i2c_Failed by the I2C driver wrapper)
+    - Additional update of SCI2C implementation: Ensure multiple consecutive NACK’s on address will trigger a return from function ‘sci2c_SlaveToMasterDataTx’.
+    - sci2c_Init update: initial loop fetching sci2c status modified so a SoftReset is issued for all exception types.
+    - Solved potential buffer overflow in the implementation of smApduAppendCmdData
+    - Added additional explicit checks that pointer arguments passed at the AX_API/A71CH_API level are not NULL pointers. In case this check was done through an ‘assert’ statement, the ‘assert’ statement has been removed.
+
+  - 1.5.0
+    - Added i.MX RT1050 EVKB and LPC54018 IoT module projects
+    - Added Watson IoT demo
+    - GP Storage Lookup table is no longer restricted to 5 objects, up to 254 objects can be stored (use HLSE_MAX_OBJECTS_IN_TABLE (>=8) to limit support and save memory)
+    - GP Storage Update Counter can be disabled by defining HLSE_DISABLE_UPDATE_COUNTER (not defined by default).
+    - It’s possible to fetch the absolute storage offset of an object
+    - Specific error code when attempting to update a locked Lookup table
+    - Extended doxygen documentation
+
+  - 1.4.2
+    - Upgraded rtos\amazon-freertos\lib\pkcs11\portable\nxp\se_hostlib\pkcs11_se.c
+    - Added GCP (Google Cloud Platform Demo)
+    - Readme updates for AWS JITR Demo
+
+  - 1.4.0.1
+    - Examples: Fix time stamp printing on embedded platform.
+      (Time stams are supported only for Linux/Windows)
+
+  - 1.0.0
+    - New integration
+
+*/

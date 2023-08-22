@@ -1,0 +1,36 @@
+Release Name: FreeMASTER Communication Driver
+=============================================
+
+FreeMASTER Communication Driver             Version: 3.x
+for NXP Microcontrollers                    Author: NXP
+                                            License: LA_OPT_NXP_Software_License - Production Use - Section 2.3 applies
+                                            Content register: this file
+                                            Format: source code
+                                            Location: src/common/*, src/platforms/*, src/drivers/*
+
+
+FreeMASTER Example Code                     Version: n/a
+                                            Author: NXP
+                                            License: Open Source - BSD-3-Clause               
+                                            Content register: this file
+                                            Format: source code
+                                            Location: boards/*, src/support/mcuxsdk_usb/*
+
+
+SHA-1 crypto-algorithms library             Version: n/a
+written by Brad Conte, brad@bradconte.com   License: public domain
+updated by NXP                              License text: https://github.com/B-Con/crypto-algorithms/blob/master/README.md
+                                            Original location: https://github.com/B-Con/crypto-algorithms
+                                            Format: source code modified for FreeMASTER driver needs
+                                            Location: src/common/freemaster_sha.c
+
+
+bernii gauge.js component                   Used as minified version in demo project UI
+                                            Author: Bernard Kobos, https://github.com/bernii
+                                            License: MIT 
+                                            Original location: http://bernii.github.io/gauge.js
+
+SEGGER RTT support                          Version: 7.22b 
+                                            Author: SEGGER Microcontroller GmbH
+                                            License: public use permitted
+                                            Location: src/support/segger_rtt/*

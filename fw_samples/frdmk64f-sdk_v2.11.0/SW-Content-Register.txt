@@ -1,0 +1,608 @@
+Release Name: MCUXpresso Software Development Kit (SDK)
+Release Version: 2.11.0
+Package License: LA_OPT_NXP_Software_License.txt - Additional Distribution License granted, license in Section 2.3 applies
+
+SDK_Peripheral_Driver      Name: SDK Peripheral Driver                       
+                           Version: 2.x.x                                    
+                           Outgoing License: BSD-3-Clause                    
+                           License File: COPYING-BSD-3                       
+                           Format: source code                               
+                           Description: Peripheral drivers are designed for  
+                           the most common use cases identified for the      
+                           underlying hardware block.                        
+                           Location: devices/<device>/drivers                
+                           Origin: NXP (BSD-3-Clause)                        
+
+SDK_Examples               Name: SDK examples                                
+                           Version: NA                                       
+                           Outgoing License: BSD-3-Clause                    
+                           License File: COPYING-BSD-3                       
+                           Format: source code, binary, project files, linker
+                           files                                             
+                           Description: SDK out of box examples to show how  
+                           to use peripheral drivers and integrate           
+                           middleware.                                       
+                           Location: boards/<board>/                         
+                           Origin: NXP (BSD-3-Clause)                        
+
+SDK_Device                 Name: SDK SoC files                               
+                           Version: NA                                       
+                           Outgoing License: BSD-3-Clause                    
+                           License File: COPYING-BSD-3                       
+                           Format: source code, linker files                 
+                           Description: Device system files, template files, 
+                           IDE related startup and linker files.             
+                           Location: devices/<device>/                       
+                           Origin: NXP (BSD-3-Clause)                        
+
+cmsis                      Name: CMSIS                                       
+                           Version: 5.6.0                                    
+                           Outgoing License: Apache License 2.0              
+                           License File: CMSIS/LICENSE.txt                   
+                           Format: source code                               
+                           Description: Vendor-independent hardware          
+                           abstraction layer for microcontrollers that are   
+                           based on Arm Cortex processors, distributed by    
+                           ARM. cores                                        
+                           Location: CMSIS/                                  
+                           Origin: ARM (Apache-2.0) -                        
+                           https://github.com/ARM-software/CMSIS_5/releases/t
+                           ag/5.6.0                                          
+
+cmsis_gpio                 Name: CMSIS GPIO Interface                        
+                           Version: 2.0.0                                    
+                           Outgoing License: BSD-3-Clause                    
+                           License File: COPYING-BSD-3                       
+                           Format: source code                               
+                           Description: CMSIS Driver style GPIO interface    
+                           definition created by NXP.                        
+                           Location: CMSIS/Driver/Include/Driver_GPIO.h      
+                           Origin: NXP (BSD-3-Clause)                        
+
+SDK_Components             Name: SDK components and board peripheral drivers 
+                           Version: NA                                       
+                           Outgoing License: BSD-3-Clause                    
+                           License File: COPYING-BSD-3                       
+                           Format: source code                               
+                           Description: SDK components and board peripheral  
+                           drivers, for example, flash and codec drivers.    
+                           Location: components/                             
+                           Origin: NXP (BSD-3-Clause)                        
+
+jsmn                       Name: JSMN                                        
+                           Version: NA                                       
+                           Outgoing License: MIT                             
+                           License File:                                     
+                           rtos/freertos/libraries/3rdparty/jsmn/LICENSE     
+                           Format: source code                               
+                           Description: JSMN (Jasmine) JSON parser.          
+                           Location: rtos/freertos/libraries/3rdparty/jsmn   
+                           Origin: Serge A. Zaitsev (MIT)                    
+                           Url: http://zserge.com/jsmn.html                  
+
+pkcs11                     Name: PKCS #11                                    
+                           Version: NA                                       
+                           Outgoing License: MIT (with RF on RAND patent     
+                           clauses                                           
+                           https://www.oasis-open.org/policies-guidelines/ipr
+                           #RF-on-RAND-Mode)                                 
+                           License File:                                     
+                           rtos/freertos/libraries/3rdparty/pkcs11/LICENSE.md
+                           Format: source code                               
+                           Description: PKCS #11 standard for cryptographic  
+                           tokens controlling authentication. Forked from    
+                           https://github.com/oasis-tcs/pkcs11               
+                           Location: rtos/freertos/libraries/3rdparty/pkcs11 
+                           Origin: OASIS PKCS 11 TC (MIT)                    
+                           Url: https://github.com/amazon-freertos/pkcs11    
+
+http-parser                Name: http-parser                                 
+                           Version: NA                                       
+                           Outgoing License: MIT                             
+                           License File:                                     
+                           rtos/freertos/libraries/coreHTTP/source/dependency
+                           /3rdparty/http_parser/LICENSE-MIT                 
+                           Format: source code                               
+                           Description: Parser for HTTP messages written in  
+                           C. It parses both requests and responses. Forked  
+                           from https://github.com/nodejs/http-parser        
+                           Location:                                         
+                           rtos/freertos/libraries/coreHTTP/source/dependency
+                           /3rdparty/http_parser                             
+                           Origin: Joyent, Inc.                              
+                           Url: https://github.com/nodejs/http-parser        
+
+tinycrypt                  Name: tinycrypt                                   
+                           Version: 0.2.8                                    
+                           Outgoing License: BSD-3-Clause, BSD-2-Clause      
+                           License File:                                     
+                           rtos/freertos/libraries/3rdparty/tinycrypt/LICENSE
+                           Format: source code                               
+                           Description: Minimal set of standard cryptography 
+                           primitives. Forked from                           
+                           https://github.com/intel/tinycrypt                
+                           Location:                                         
+                           rtos/freertos/libraries/3rdparty/tinycrypt        
+                           Origin: Intel Corporation                         
+                           Url:                                              
+                           https://github.com/aws/amazon-freertos/tree/202012
+                           .00/libraries/3rdparty/tinycrypt                  
+
+tracealyzer_recorder       Name: tracealyzer_recorder                        
+                           Version: 3.1.2                                    
+                           Outgoing License: Percepio License                
+                           License File:                                     
+                           rtos/freertos/libraries/3rdparty/tracealyzer_recor
+                           der/LICENSE                                       
+                           Format: source code                               
+                           Description: Tracealyzer for FreeRTOS is a        
+                           sophisticated tool for tracing and visualization  
+                           of FreeRTOS-based systems.                        
+                           Location:                                         
+                           rtos/freertos/libraries/3rdparty/tracealyzer_recor
+                           der                                               
+                           Origin: Percepio AB (Proprietary)                 
+                           Url:                                              
+                           https://github.com/aws/amazon-freertos/tree/202012
+                           .00/libraries/3rdparty/tracealyzer_recorder       
+
+win_pcap                   Name: win_pcap                                    
+                           Version: NA                                       
+                           Outgoing License: WinPcap License                 
+                           License File:                                     
+                           rtos/freertos/libraries/3rdparty/win_pcap/LICENSE 
+                           Format: source code                               
+                           Description: Packet capture library.              
+                           Location:                                         
+                           rtos/freertos/libraries/3rdparty/win_pcap         
+                           Origin: winpcap.org                               
+                           Url:                                              
+                           https://github.com/aws/amazon-freertos/tree/202012
+                           .00/libraries/3rdparty/win_pcap                   
+
+mbedtls_utils              Name: mbedtls_utils                               
+                           Version: NA                                       
+                           Outgoing License: Apache-2.0                      
+                           License File:                                     
+                           rtos/freertos/libraries/3rdparty/mbedtls_utils/LIC
+                           ENSE-2.0.txt                                      
+                           Format: source code                               
+                           Description: Functions to convert the high-level  
+                           and low-level mbedtls error codes.                
+                           Location:                                         
+                           rtos/freertos/libraries/3rdparty/mbedtls_utils    
+                           Origin: ARM Limited                               
+                           Url:                                              
+                           https://github.com/aws/amazon-freertos/tree/202012
+                           .00/libraries/3rdparty/mbedtls_utils              
+
+unity                      Name: unity                                       
+                           Version: NA                                       
+                           Outgoing License: MIT                             
+                           License File:                                     
+                           rtos/freertos/libraries/3rdparty/unity/LICENSE.txt
+                           Format: source code                               
+                           Description: Unity Project - A Test Framework for 
+                           C                                                 
+                           Location: rtos/freertos/libraries/3rdparty/unity  
+                           Origin: Mike Karlesky, Mark VanderVoord, Greg     
+                           Williams (MIT)                                    
+                           Url: https://github.com/ThrowTheSwitch/Unity      
+
+cmock                      Name: CMock                                       
+                           Version: NA                                       
+                           Outgoing License: MIT                             
+                           License File:                                     
+                           rtos/freertos/libraries/3rdparty/CMock/LICENSE.txt
+                           Format: source code                               
+                           Description: C mocking library                    
+                           Location: rtos/freertos/libraries/3rdparty/CMock  
+                           Origin: Mike Karlesky, Mark VanderVoord, Greg     
+                           Williams (MIT)                                    
+                           Url: https://github.com/ThrowTheSwitch/CMock      
+
+usb                        Name: USB                                         
+                           Version: 2.8.1                                    
+                           Outgoing License: BSD-3-Clause                    
+                           License File: COPYING-BSD-3                       
+                           Format: source code                               
+                           Description: NXP USB stack. This is a version of  
+                           the USB stack that has been integrated with the   
+                           MCUXpresso SDK.                                   
+                           Location: middleware/usb                          
+                           Origin: NXP (BSD-3-Clause)                        
+
+issdk                      Name: ISSDK                                       
+                           Version: 1.7                                      
+                           Outgoing License: BSD-3-Clause                    
+                           License File: COPYING-BSD-3                       
+                           Format: source code                               
+                           Description: NXP IoT Sensing SDK. It combines a   
+                           set of robust Sensor Drivers and Algorithms along 
+                           with example applications.                        
+                           Location: middleware/issdk                        
+                           Origin: NXP (BSD-3-Clause)                        
+
+freertos_kernel            Name: FreeRTOS                                    
+                           Version: 10.4.3_rev1                              
+                           Outgoing License: MIT                             
+                           License File:                                     
+                           rtos/freertos/freertos_kernel/LICENSE.md          
+                           Format: source code                               
+                           Description: Open source RTOS kernel for small    
+                           devices                                           
+                           Location: rtos/freertos/freertos_kernel           
+                           Origin: Amazon (MIT)                              
+                           Url: https://aws.amazon.com/freertos/             
+
+aws_iot                    Name: AWS IoT                                     
+                           Version: 202107.0.0_rev1                          
+                           Outgoing License: MIT                             
+                           License File: rtos/freertos/LICENSE               
+                           Format: source code                               
+                           Description: IoT operating system for             
+                           microcontrollers                                  
+                           Location: rtos/freertos                           
+                           Origin: Amazon (MIT)                              
+                           Url: https://aws.amazon.com/freertos/             
+
+sdmmc                      Name: SD MMC SDIO Card middleware                 
+                           Version: 2.2.7                                    
+                           Outgoing License: BSD-3-Clause                    
+                           License File: COPYING-BSD-3                       
+                           Format: source code                               
+                           Description: A software component support SD card,
+                           eMMC card, SDIO card.                             
+                           Location: middleware/sdmmc                        
+                           Origin: NXP (BSD-3-Clause)                        
+
+mmcau                      Name: mmCAU S/W Library                           
+                           Version: 2.0.1                                    
+                           Outgoing License: BSD-3-Clause                    
+                           License File: COPYING-BSD-3                       
+                           Format: source code                               
+                           Description: S/W library that works with the      
+                           memory-mapped cryptographic acceleration unit     
+                           present on some MCUXpresso SoCs                   
+                           Location: middleware/mmcau                        
+                           Origin: NXP (BSD-3-Clause)                        
+
+fatfs                      Name: FatFs                                       
+                           Version: 0.14b                                    
+                           Outgoing License: FatFs License                   
+                           License File: middleware/fatfs/LICENSE.txt        
+                           Format: source code                               
+                           Description: Generic FAT file system for small    
+                           embedded devices.                                 
+                           Location: middleware/fatfs                        
+                           Origin: Electronic Lives Mfg. by ChaN of Ageo     
+                           city, Japan (FatFs License)                       
+                           Approved open source license: Yes                 
+                           Url: http://elm-chan.org/fsw/ff/00index_e.html    
+
+mbedtls                    Name: Mbed TLS                                    
+                           Version: 2.26.0                                   
+                           Outgoing License: Apache-2.0                      
+                           License File: middleware/mbedtls/LICENSE          
+                           Format: source code                               
+                           Description: Cryptographic and SSL/TLS Library    
+                           Location: middleware/mbedtls                      
+                           Origin: ARM(Apache-2.0) -                         
+                           https://github.com/ARMmbed/mbedtls/releases/tag/v2
+                           .26.0                                             
+
+lwip                       Name: lwIP TCP/IP Stack                           
+                           Version: lwIP git repository (2021-05-11, branch: 
+                           master, SHA-1:                                    
+                           7ec4e9be304e7f8953740f10b2c810a292e89449)         
+                           Outgoing License: BSD-3-Clause                    
+                           License File: middleware/lwip/COPYING             
+                           Format: source code                               
+                           Description: A light-weight TCP/IP stack          
+                           Location: middleware/lwip                         
+                           Origin: Swedish Institute of Computer Science     
+                           Url: http://savannah.nongnu.org/projects/lwip     
+
+rtcesl                     Name: rtcesl                                      
+                           Version: 4.7 (CM0,CM4,CM7,CM33) + 4.5 (DSC)       
+                           Outgoing License: BSD-3-Clause                    
+                           License File: COPYING-BSD-3                       
+                           Format: object code & header files                
+                           Description: NXP Real Time Control Embedded       
+                           Software Library.                                 
+                           Location: middleware/rtcesl                       
+                           Origin: NXP (BSD-3-Clause)                        
+
+cmsis_drivers              Name: SDK CMSIS Peripheral Drivers                
+                           Version: 2.x.x                                    
+                           Outgoing License: Apache License 2.0              
+                           License File: CMSIS/LICENSE.txt                   
+                           Format: source code                               
+                           Description: CMSIS Peripheral drivers are designed
+                           to provide hardware independent APIs which make   
+                           application reusable across a wide range of       
+                           supported microcontroller devices.                
+                           Location: devices/<device>/cmsis_drivers          
+                           Origin: NXP (Apache License 2.0)                  
+
+multicore                  Name: Multicore SDK                               
+                           Version: 2.11.0                                   
+                           Outgoing License: BSD-3-Clause                    
+                           License File: COPYING-BSD-3                       
+                           Format: source code                               
+                           Description: NXP Multicore Software Development   
+                           Kit.                                              
+                           Location: middleware/multicore                    
+                           Origin: NXP (BSD-3-Clause)                        
+
+erpc                       Name: eRPC                                        
+                           Version: 1.9.0                                    
+                           Outgoing License: BSD-3-Clause                    
+                           License File: middleware/multicore/erpc/LICENSE   
+                           Format: source code                               
+                           Description: Embedded Remote Procedure Call       
+                           Location: middleware/multicore/erpc               
+                           Origin: NXP & community contributors              
+                           Url: https://github.com/EmbeddedRPC/erpc          
+
+the_bus_pirate             Name: The Bus Pirate                              
+                           Version: NA                                       
+                           Outgoing License: Open Source - CC0 (Public Domain
+                           Dedication License)                               
+                           License File:                                     
+                           http://code.google.com/p/the-bus-pirate/          
+                           Format: source code                               
+                           Description: OS independent serial interface      
+                           Location:                                         
+                           middleware/multicore/erpc/erpc_c/port/erpc_serial.
+                           h,                                                
+                           middleware/multicore/erpc/erpc_c/port/erpc_serial.
+                           cpp                                               
+                           Origin: Community                                 
+                           Url: http://code.google.com/p/the-bus-pirate/     
+
+cpp_template               Name: CPP Template                                
+                           Version: NA                                       
+                           Outgoing License: Open Source - MIT               
+                           License File:                                     
+                           middleware/multicore/erpc/erpcgen/src/cpptemplate/
+                           LICENSE.txt                                       
+                           Format: source code                               
+                           Description: CPP Template                         
+                           Location:                                         
+                           middleware/multicore/erpc/erpcgen/src/cpptemplate 
+                           Origin: Ryan Ginstrom & Martinho Fernandes        
+
+cpp_option_parser          Name: C++ option-parser                           
+                           Version: NA                                       
+                           Outgoing License: Brad Appleton's license         
+                           License File:                                     
+                           http://www.bradapp.com/ftp/src/libs/C++/Options.ta
+                           r.gz , see README file                            
+                           Format: Plain Text                                
+                           Description: C++ option-parser                    
+                           Location:                                         
+                           middleware/multicore/erpc/erpcgen/src/options.cpp 
+                           Origin: Brad Appleton bradapp@enteract.com        
+                           Url:                                              
+                           http://www.bradapp.com/ftp/src/libs/C++/Options.ht
+                           ml                                                
+
+emwin                      Name: emWin                                       
+                           Version: 6.16                                     
+                           Outgoing License: LA_OPT_NXP_Software_License.txt 
+                           - Additional distribution license granted -       
+                           License in Section 2.3 applies                    
+                           License File: LA_OPT_NXP_Software_License.txt     
+                           Format: Precompiled libraries, header files       
+                           Description: emWin graphics library               
+                           Location: middleware/emwin                        
+                           Origin: SEGGER Microcontroller Systems LLC        
+                           (Proprietary)                                     
+                           Url:                                              
+                           http://www.nxp.com/pages/emwin-graphics-library:EM
+                           WIN-GRAPHICS-LIBRARY                              
+
+freemaster                 Name: FreeMASTER                                  
+                           Version: 3.0.5                                    
+                           Outgoing License: LA_OPT_NXP_Software_License.txt 
+                           - Additional distribution license granted -       
+                           License in Section 2.3 applies                    
+                           License File:                                     
+                           middleware/freemaster/license/LA_OPT_NXP_Software_
+                           License.txt                                       
+                           Format: source code & header files                
+                           Description: FreeMASTER communication driver      
+                           Location: middleware/freemaster/src               
+                           Origin: NXP                                       
+
+freemaster-examples        Name: FreeMASTER                                  
+                           Version: 3.0.5                                    
+                           Outgoing License: BSD-3-Clause                    
+                           License File: COPYING-BSD-3                       
+                           Format: source code & header files                
+                           Description: FreeMASTER example applications      
+                           Location: boards/<board>/freemaster_examples      
+                           Origin: NXP                                       
+
+gradle                     Name: Gradle                                      
+                           Version: 4.1                                      
+                           Outgoing License: Apache-2.0                      
+                           License File:                                     
+                           https://github.com/gradle/gradle/blob/master/LICEN
+                           SE                                                
+                           Format: binary library                            
+                           Description: Gradle build tool                    
+                           Location:                                         
+                           boards/<board>/aws_examples/remote_control_android
+                           /gradle,                                          
+                           boards/<board>/aws_examples/led_wifi_android/gradl
+                           e,                                                
+                           boards/<board>/aws_examples/device_configuration_a
+                           ndroid/gradle                                     
+                           Origin: Gradle Inc (Apache-2.0)                   
+                           Url: https://github.com/gradle/gradle             
+
+AwsRemoteControl           Name: AWS Remote Control                          
+                           Version: 1.0                                      
+                           Outgoing License: Apache-2.0 & BSD                
+                           License File:                                     
+                           http://www.apache.org/licenses/LICENSE-2.0,       
+                           COPYING-BSD-3                                     
+                           Format: binary                                    
+                           Description: AWS Remote Control example Android   
+                           application                                       
+                           Location:                                         
+                           boards/<board>/aws_examples/remote_control_android
+                           /AwsRemoteControl.apk                             
+                           Origin: Android Open Source Project               
+                           (https://source.android.com/) & NXP (Apache-2.0 & 
+                           BSD)                                              
+
+SE_hostlib                 Name: se_hostlib                                  
+                           Version: 2.12.0                                   
+                           Outgoing License: Plug & Trust Middleware License 
+                           License File: middleware/se_hostlib/EULA.pdf      
+                           Format: source code                               
+                           Description: Secure element host library          
+                           Location: middleware/se_hostlib                   
+                           Origin: NXP (Proprietary)                         
+
+TinyCBOR                   Name: TinyCBOR                                    
+                           Version: 0.5.2                                    
+                           Outgoing License: MIT                             
+                           License File:                                     
+                           rtos/freertos/libraries/3rdparty/tinycbor/src/LICE
+                           NSE                                               
+                           Format: source code                               
+                           Description: TinyCBOR                             
+                           Location:                                         
+                           rtos/freertos/libraries/3rdparty/tinycbor         
+                           Origin: Intel Corporation (MIT)                   
+
+Bootloader Source          Name: Bootloader Source                           
+                           Version: 2.7.0                                    
+                           Outgoing License: BSD-3-Clause                    
+                           License File: COPYING-BSD-3                       
+                           Format: source code                               
+                           Description: Software for Bootloaders,            
+                           Flashloaders and host tools                       
+                           Location: middleware/mcu-boot                     
+                           Origin: NXP (BSD-3-Clause)                        
+
+lvgl                       Name: LVGL                                        
+                           Version: 8.0.2                                    
+                           Outgoing License: MIT                             
+                           License File: middleware/lvgl/lvgl/LICENCE.txt    
+                           Format: source code                               
+                           Description: Light and Versatile Graphics Library 
+                           (LVGL)                                            
+                           Location: middleware/lvgl                         
+                           Origin: Gabor Kiss-Vamosi                         
+                           Url: https://github.com/lvgl/lvgl                 
+
+freertos_corehttp          name: FreeRTOS coreHTTP library                   
+                           version: 2.0.1                                    
+                           Outgoing License: MIT                             
+                           License File:                                     
+                           rtos/freertos/librarires/coreHTTP/LICENSE         
+                           Format: source code, header files                 
+                           Description: C language HTTP client library       
+                           designed for embedded platforms                   
+                           Location: rtos/freertos/libraries/coreHTTP        
+                           Origin: FreeRTOS -                                
+                           https://github.com/FreeRTOS/coreHTTP              
+
+sdmmc_sdspi                Name: SD Card middleware                          
+                           Version: 2.1.4                                    
+                           Outgoing License: BSD-3-Clause                    
+                           License File: COPYING-BSD-3                       
+                           Format: source code                               
+                           Description: A software component support access  
+                           SD card through spi.                              
+                           Location: middleware/sdmmc/sdspi                  
+                           Origin: NXP (BSD-3-Clause)                        
+
+Utility Source - elf.py    Name: Bootloader Utility Source - elf.py          
+                           Version: NA                                       
+                           Outgoing License: Simplified BSD License          
+                           License File:                                     
+                           http://bazaar.launchpad.net/~zsquareplusc/python-m
+                           sp430-tools/trunk/view/head:/LICENSE.txt          
+                           Format: source code                               
+                           Description: Python implementation of an ELF file 
+                           reader                                            
+                           Location: middleware/mcu-boot/bin/elf.py          
+                           Origin: Chris Liechti (cliechti@gmx.net)          
+                           Url:                                              
+                           http://bazaar.launchpad.net/~zsquareplusc/python-m
+                           sp430-tools/trunk/view/head:/msp430/memory/elf.py 
+
+segger_systemview          Name: Segger SystemView Demo                      
+                           Version: 3.3                                      
+                           Outgoing License: BSD-1-Clause                    
+                           License File:                                     
+                           boards/<board>/rtos_examples/visualization/freerto
+                           s_segger_sysview/LICENSE                          
+                           Format: source code                               
+                           Description: Segger systemview demo               
+                           Location:                                         
+                           boards/<board>/rtos_examples/visualization/freerto
+                           s_segger_sysview                                  
+                           Origin: Segger (BSD-1-Clause)                     
+
+ntag_i2c_plus              Name: NTAG I2C plus                               
+                           Version: 1.0.0                                    
+                           Outgoing License: BSD-3-Clause                    
+                           License File: COPYING-BSD-3                       
+                           Format: source code                               
+                           Description: NTAG I2C plus communication library  
+                           Location: middleware/ntag_i2c_plus                
+                           Origin: NXP (BSD-3-Clause)                        
+
+Pedometer_Library          Name: Pedometer Library                           
+                           Version: 1.0                                      
+                           Outgoing License: LA_OPT_NXP_Software_License     
+                           License File:                                     
+                           Format: binary library                            
+                           Description: Pedometer algorithm library for Arm  
+                           Cortex M0+ and M4 processors                      
+                           Location:                                         
+                           middleware/issdk/algorithms/pedometer/lib         
+                           Origin: KEYnetik, Inc                             
+
+aml                        Name: aml                                         
+                           Version: 1.4.4                                    
+                           Outgoing License: BSD-3-Clause                    
+                           License File: COPYING-BSD-3                       
+                           Format: source code & header files                
+                           Description: NXP Analog Middleware Layer          
+                           Location: middleware/aml                          
+                           Origin: NXP (BSD-3-Clause)                        
+
+sigfox                     Name: sigfox                                      
+                           Version: 2.0.0                                    
+                           Outgoing License: BSD-3-Clause                    
+                           License File: COPYING-BSD-3                       
+                           Format: source code & header files                
+                           Description: NXP Sigfox driver                    
+                           Location: middleware/sigfox                       
+                           Origin: NXP (BSD-3-Clause)                        
+
+lvhb                       Name: lvhb                                        
+                           Version: 1.0.0                                    
+                           Outgoing License: BSD-3-Clause                    
+                           License File: COPYING-BSD-3                       
+                           Format: source code & header files                
+                           Description: NXP Low Voltage H-Bridge driver      
+                           Location: middleware/lvhb                         
+                           Origin: NXP (BSD-3-Clause)                        
+
+secure-subsystem           Name: secure subsystem                            
+                           Version: 1.0                                      
+                           Outgoing License: BSD-3-Clause                    
+                           License File: COPYING-BSD-3                       
+                           Format: source code                               
+                           Description: Add secure peripherals control.      
+                           Location: middleware/secure-subsystem             
+                           Origin: NXP (BSD-3-Clause)                        
