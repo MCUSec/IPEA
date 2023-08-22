@@ -1,4 +1,6 @@
-# Facilitating Non-Intrusive In-Vivo Firmware Testing with Stateless Instrumentation
+# IPEA
+
+Facilitating Non-Intrusive In-Vivo Firmware Testing with Stateless Instrumentation
 
 ## Introduction
 Although numerous dynamic testing techniques have been developed, they can hardly be directly applied to firmware of deeply embedded (e.g., microcontroller-based) devices due to the tremendously different runtime environment and restricted resources on these devices. This work tackles these challenges by leveraging the unique position of microcontroller devices during firmware development. That is, firmware de- velopers have to rely on a powerful engineering workstation that connects to the target device to program and debug code. Therefore, we develop a decoupled firmware testing framework named IPEA, which shifts the overhead of resource-intensive analysis tasks from the microcontroller to the workstation. Only lightweight “needle probes” are left in the firmware to collect internal execution information without processing it. We also instantiated this framework with a sanitizer based on pointer capability (IPEA-San) and a feedback-guided fuzzer (IPEA-Fuzz). By comparing IPEA-San with a port of AddressSanitizer for microcontrollers, we show that IPEA-San reduces the memory overhead by 73.11% in real-world firmware with better detection accuracy. Running IPEA-Fuzz with IPEA-San, we found five new bugs in real IoT libraries and peripheral driver code.
@@ -8,37 +10,44 @@ For **NDSS'24 AE**, please refer to this [documentation](docs/AE.md).
 ## Directories
 - ``AFL``: Source code of IPEA-Fuzz (based on AFL-2.5b)
 - ``core``: Source code of IPEA-Core and IPEA-San
-- ``compiler-plugins``: LLVM pass of IPEA-San instrumentation
+- ``compiler-plugins``: Compiler plugins
+    - ``IPEA-San``: LLVM pass of IPEA-San instrumentation
 - ``compiler-rt``: IPEA runtime library (for target MCU)
+- ``docs``: Documentations
 - ``fw_samples``: Source code of sample projects used in the evaluation
 - ``include``: Header files
 - ``projects``: Ported projects
-    - ``MCU_ASAN``: Ported ASan for MCU
-    - ``MCU_Juliet_Testsuite``: Ported Juliet Test Suite for 
-    MCU
+    - ``MCU_ASAN``: Ported ASan for microcontrollers
+    - ``MCU_Juliet_Testsuite``: Ported Juliet Test Suite for microcontrollers
     - ``BEEBS``: BEEBS benchmark
 - ``scripts``: Scripts that facilitate environment setup, unit test, fuzzing, experiments, etc.
 - ``unitttest``: Unit test program for IPEA framework
+- ``build.sh``: Script of building IPEA framework
+- ``clean.sh``: Script of cleaning IPEA framework
 
 ## Environment
 
 #### Hardware
 
 - Debugger
-    - SEGGER J-Link (Edu/Edu Mini/Onboard) or J-Trace
+    - SEGGER J-Link (Pro/Edu/Edu Mini/Onboard) or J-Trace
 
-- Development boards (used in our experiments)
+- Development boards (used in the artifact evaluation)
     - NXP FRDM-K64F 
     - STM32 Nucleo-F446RE
     - STM32H7B3I-EVAL
 
+#### Host OS
+
+- Ubuntu 22.04 x86/64 LTS (recommended)
+
 #### Software and libraries
 
-- Ubuntu 22.04 LTS x86_64 (recommended)
 - J-Link Software and Documentation pack
 - J-Link Runtime Library
 - Arm GNU Toolchain
 - LLVM 13
+- Python 3.x
 
 ## Getting Started
 
@@ -103,6 +112,13 @@ package from the official [website](https://developer.arm.com/downloads/-/gnu-rm
     export PATH=${IPEA_HOME}/build/AFL:${IPEA_HOME}/build/unittest:${IPEA_HOME}/scripts:$PATH
     ```
 
+By the above steps, the following components will be built:
+
+- `ipea-san.so`: **IPEA-San** compiler plugin.
+- `libipea-rt.a`: the runtime library of **IPEA-San**. 
+- `ipea-unittest`: a unit testing program of **IPEA-San**. It is responsible for verifying the capability of capturing memory-related errors in the target firmware. This program will download the instrumented firmware to the target MCU and run it. An error will be returned if any memory error detected.
+
+- `ipea-fuzz`: the main program of **IPEA-Fuzz**, an AFL-based, coverage-guided fuzzer. Like fuzzing x86_64 applications on a PC, it generates test cases and feeds to the target MCU and receives code coverage feedbacks via the debug dongle (i.e., a J-Link Probe). 
 <!-- #### Run the target with IPEA-San
 
 Once the firmware has been compiled with IPEA-San, the firmware can be executed with ``ipea-unittest`` program. It is responsible for:
@@ -174,7 +190,8 @@ This step needs the full knowledge of the firmware behavior. Here, we illustrate
     ...
     CFLAGS += --target=arm-none-eabi
     CFLAGS += --sysroot=$(ARMGCC_DIR)/arm-none-eabi
-    CFLAGS += -flegacy-pass-manager -Xclang -load -Xclang $(IPEA_HOME)/build/compiler-plugins/uSan/usan.so
+    CFLAGS += -flegacy-pass-manager -Xclang -load -Xclang $(IPEA_HOME)/build/compiler-plugins/IPEA-San/ipea-san.so
+    CFLAGS += -I$(IPEA_HOME)/include/target
     ...
     LDFLAGS += -L$(IPEA_HOME)/compiler-rt/build -lipea-rt
     ...
@@ -217,3 +234,173 @@ Arguments:
 - `-t`: specify the timeout in milliseconds (default is 1000 ms)
 
 The runtime log would be saved as `tracelog_0.txt`. If a crash dected, the call stack information would be saved as `callstack.txt`.
+
+
+## Artifact Evaluation
+
+We claim "**Avaliable**" and "**Functional**" badges in NDSS'24 AE. If the required hardware (e.g., J-Link Probe and evaluation board) is unavailable, please login to our AE server in which all software and hardware dependencies are in place for the evaluation.
+
+### IPEA-San Evaluation
+
+`Toy` program accepts arbitrary strings. The input starting with the specific character will trigger different memory bugs:
+
+- '`a`': Stack buffer overflow
+- '`e`': Heap buffer overflow
+- '`i`': Global buffer overflow
+- '`o`': Use after free
+- '`u`': Double free
+- '`x`': Null pointer dereference
+- '`y`': Peripheral-based buffer overflow
+- '`z`': Sub-object buffer overflow
+
+First off, build `Toy` program:
+
+```bash
+cd ${IPEA_HOME}/fw_samples/Toy
+make ipea
+```
+
+Then, run `Toy` with a string input (e.g., '`axxxx`' which will trigger stack buffer overflow):
+
+```bash
+$ echo 'axxxx' | run_unittest.py -b toy -t 1000
+```
+
+**NOTE**: When running `ipea-unittest` (and `ipea-fuzz`), a pop-up window would appear to indicate the progress of firmware downloading.
+If using a J-Link Edu/Edu mini/OB, you will be asked to agree the agreement of usage. 
+
+Arguments:
+
+- `-b`: the path of firmware
+- `-t`: timeout in milliseconds
+
+The output would look like:
+
+```bash
+global variable - name: of_global, addr: 0x1fff02b8, size: 16
+global variable - name: DeviceTestCaseBuffer, addr: 0x1fff0098, size: 512
+global variable - name: TestCaseLen, addr: 0x1fff0298, size: 4
+global variable - name: s_uartHandle, addr: 0x1fff02c8, size: 24
+global variable - name: s_uartIsr, addr: 0x1fff02e0, size: 4
+taskset 0x1 ipea-unittest toy -c jlink.conf -t 1000
+test case buffer length: 512
+Target crashed
+```
+
+The detailed execution log can be found from `tracelog_0.txt`:
+
+```bash
+$ cat tracelog_0.txt
+
+[2023-07-15 02:41:04.555] [init] [info] Assigned tag for global variable 'of_global': 0xabcd,  address: 0x1fff02b8, length: 16
+[2023-07-15 02:41:04.555] [init] [info] Assigned tag for global variable 'DeviceTestCaseBuffer': 0xabce,  address: 0x1fff0098, length: 512
+[2023-07-15 02:41:04.555] [init] [info] Assigned tag for global variable 'TestCaseLen': 0xabcf,  address: 0x1fff0298, length: 4
+[2023-07-15 02:41:04.555] [init] [info] Assigned tag for global variable 's_uartHandle': 0xabd0,  address: 0x1fff02c8, length: 24
+[2023-07-15 02:41:04.555] [init] [info] Assigned tag for global variable 's_uartIsr': 0xabd1,  address: 0x1fff02e0, length: 4
+[2023-07-15 02:41:04.555] [init] [info] Assigned tag for global variable 'heap_end': 0xabd2,  address: 0x1fff02e4, length: 4
+[2023-07-15 02:41:04.555] [AFL_RunTarget] [info] RTT initialized
+[2023-07-15 02:41:04.557] [AFL_RunTarget] [info] Reach fuzz start point
+[2023-07-15 02:41:04.558] [AFL_RunTarget] [info] Written testcase: 5 bytes
+[2023-07-15 02:41:04.559] [AFL_RunTarget] [info] Target is running
+[2023-07-15 02:41:04.560] [AFL_RunTarget] [info] Terminated. Execution time: 2 ms
+[2023-07-15 02:41:04.562] [RTT_Decode] [debug] Total trace size: 69 bytes
+[2023-07-15 02:41:04.562] [Subroutine] [debug] Assigned tag 0x55e99 for local variable 'of_stack' @ 0x2002ffe8
+[2023-07-15 02:41:04.562] [Subroutine] [debug] Assigned tag 0x55ea1 for local variable 'of_heap' @ 0x2002ffe4
+[2023-07-15 02:41:04.562] [Subroutine] [debug] Assigned tag 0x55ea9 for local variable 'flag' @ 0x2002ffe3
+[2023-07-15 02:41:04.562] [handleFuncEntryStack] [debug] Enter function main, id = 0x6e9, stack_base = 0x2002fff8, stack_top = 0x2002ff88
+[2023-07-15 02:41:04.562] [handleProp] [debug] Pointer propagation: from 0x0 to 0x2002ffe4 (tag = 0x0)
+[2023-07-15 02:41:04.562] [handleRandom] [debug] Basic block random number: -16234 ( 0xc096 )
+[2023-07-15 02:41:04.562] [handleMalloc] [debug] Allocated a heap object (size = 16) @ 0x20000008
+[2023-07-15 02:41:04.562] [handleProp] [debug] Pointer propagation: from 0xffffffff to 0x2002ffe4 (tag = 0x55eb2)
+[2023-07-15 02:41:04.562] [handleRandom] [debug] Basic block random number: 6249 ( 0x1869 )
+[2023-07-15 02:41:04.562] [handleRandom] [debug] Basic block random number: 26920 ( 0x6928 )
+[2023-07-15 02:41:04.562] [handleCheck] [info] Checking pointer dereference: pointer_id = 0x6002ffe8, address = 0x2002ffe8, length = 17
+[2023-07-15 02:41:04.562] [handleCheck] [info] Stack buffer overflow detected @ 0x2002fff8, expected tag: 0x55e99, real tag: 0x0
+[2023-07-15 02:41:04.562] [AFL_RunTarget] [info] Trace analysis result: 1
+```
+
+
+### IPEA-Fuzz Evaluation
+
+By fuzz-testing `Toy` firmware, all the memory errors listed aboved should be captured (i.e., eight unique crashes). To start the fuzzing, run `ipea-fuzz` by:
+
+```bash
+$ run_afl.py -b toy -i ./fuzz_input -t 1000
+```
+
+Arguments:
+
+- `-b`: the path of firmware
+- `-i`: the path of initial seeds
+- `-t`: timeout in milliseconds
+
+Then, an AFL UI will appear on the terminal, press `Ctrl`+`C` to exit. The fuzzing results will be saved to `output` directory, please test a usecase with `ipea-unittest` by:
+
+```bash
+$ cat output/crashes/<use_case_name> | run_unittest.py -b toy -t 1000
+```
+The execution log can be found from `tracelog_0.txt`. If a crash detected, the call stack information will be saved to `callstack.txt`.
+
+### Correctness Evaluation
+
+Juliet C/C++ Testsuite is used for evaluating the correctness of sanitizers. 
+
+- Enter the directory of Juliet project
+    ```bash
+    $ cd ${IPEA_HOME}/projects/MCU_Juliet_Testsuite
+    ```
+- Evaluate the correctness of IPEA-San
+  
+  **NOTE**: This experiment may take a long time. `--max-run=10` makes the script run only 10 programs.
+
+    ```bash
+    $ run_julite.py -p . -c mk64f.conf --max-run=10   # Test the correctness of IPEA-San
+    ```
+
+- Evaluate the correctness of ASan
+
+  **NOTE**: This experiment may take a long time. `--max-run=10` makes the script run only 10 programs. 
+
+    ```bash
+    $ run_juliet.py -p . -c mk64f.conf --max-run=10 --uss-asan    # Test the correctness of ASan
+    ```
+The result (i.e., number of FPs and FNs in each CWE) will be saved as `report_ipea.json` and `report_asan.json` for IPEA-San and ASan respectively.
+
+### Performance Evaluation
+
+[BEEBS](https://github.com/mageec/beebs) is a set of benchmarks for measuring the performance of embedded systems.
+
+- Enter the directory of BEEBS project
+  ```bash
+  $ cd ${IPEA_HOME}/projects/BEEBS
+  ```
+
+- Run BEEBS without sanitizers (baseline):
+  
+  ```bash
+  $ run_beebs.py -p . -c mk64f.conf
+  ```
+  
+- Run BEEBS with IPEA-San:
+
+  ```bash
+  $ run_beebs.py -p . -c mk64f.conf -s ipea
+  ```
+- Run BEEBS with ASan:
+  
+  ```bash
+  $ run_beebs.py -p . -c mk64f.conf -s asan  
+  ```
+
+The result (the time-consumption of each program) will be saved as `report_none.json`, `report_ipea.json` and `report_asan.json` for baseline, IPEA-San and ASan respectively. Performance overhead of each sanitizer can be obtained by comparing the corresponding time-consumption with baseline.
+
+### Fuzz-testing FRDM-K64F USB-Host Driver
+
+This experiment needs to take over 24 hours.
+
+```bash
+$ cd ${IPEA_HOME}/fw_samples/USB-Host
+$ make ipea
+$ run_afl.py -b usb_host -i ./fuzz_input -t 3000
+```
+A use-after-free bug would be found. The fuzzing result can be found from `output` directory, please test a crash usecase with `ipea-unittest` tool as described in [IPEA-Fuzz Evaluation](#IPEA-Fuzz-Evaluation).
