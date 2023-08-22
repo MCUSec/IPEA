@@ -37,7 +37,7 @@ def generate_makefile(name, board="frdmk64f", sanitizer="none"):
     if name in _EXTRA_FLAGS:
         content.append(f"CFLAGS += {_EXTRA_FLAGS[name]}")
     if sanitizer == "ipea":
-        content.append(f"include $(BOARD_DIR)board_usan.mk")
+        content.append(f"include $(BOARD_DIR)board_ipea.mk")
     elif sanitizer == "asan":
         content.append(f"include $(BOARD_DIR)board_asan.mk")
     else:

@@ -45,7 +45,7 @@ def create_makefile(cwe, is_dir_split):
 	
 	if not use_asan:
 		contents += "CFLAGS+=--target=$(TARGET_TRIPLE) --sysroot=$(ARMGCC_DIR)/$(TARGET_TRIPLE)\n"
-		contents += "ASAN=-flegacy-pass-manager -Xclang -load -Xclang $(IPEA_HOME)/build/compiler-plugins/uSan/usan.so\n"
+		contents += "ASAN=-flegacy-pass-manager -Xclang -load -Xclang $(IPEA_HOME)/build/compiler-plugins/IPEA-San/ipea-san.so\n"
 	else:
 		contents += "ASAN=-fsanitize=kernel-address --param asan-globals=1 --param asan-stack=1 -fasan-shadow-offset=$(ASAN_SHADOW_OFFSET)\n"
 		contents += "CFLAGS+=-DENABLE_ASAN\n"

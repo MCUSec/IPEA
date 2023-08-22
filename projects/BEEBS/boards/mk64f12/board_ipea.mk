@@ -15,7 +15,7 @@ INCLUDES += -I$(BOARD_DIR)../../support
 INCLUDES += -I$(BOARD_DIR)../CMSIS/Core/Include
 
 CLANG_CFLAGS = --target=$(TARGET_TRIPLE) --sysroot=$(ARMGCC_DIR)/$(TARGET_TRIPLE)
-SAN = -flegacy-pass-manager -Xclang -load -Xclang $(IPEA_HOME)/build/compiler-plugins/uSan/usan.so
+SAN = -flegacy-pass-manager -Xclang -load -Xclang $(IPEA_HOME)/build/compiler-plugins/IPEA-San/ipea-san.so
 
 CFLAGS += -DCPU_MK64FN1M0VLL12 \
 		  -DFRDM_K64F \
