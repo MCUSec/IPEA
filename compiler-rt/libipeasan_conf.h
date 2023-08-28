@@ -1,5 +1,5 @@
-#ifndef LIBUSAN_CONF_H
-#define LIBUSAN_CONF_H
+#ifndef LIBIPEASAN_CONF_H
+#define LIBIPEASAN_CONF_H
 
 #define ASM __attribute__((naked))
 #define EXPORT __attribute__((visibility("default")))
