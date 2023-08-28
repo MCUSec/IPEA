@@ -2297,7 +2297,7 @@ static u8 run_target(char** argv, u32 timeout) {
   // static u64 exec_ms = 0;
   static int prev_timed_out = 0;
   static int exec_ms = 0;
-  int retry = AFL_MAX_RETRY;
+  int retry = IPEA_MAX_RETRY;
 
   int status = 0, trace_res = 0;
   u32 tb4;
@@ -2323,7 +2323,7 @@ static u8 run_target(char** argv, u32 timeout) {
                             false,
                             false);
     if (status != TARGET_AGAIN) {
-      retry = AFL_MAX_RETRY;
+      retry = IPEA_MAX_RETRY;
       break;
     }
     retry--;

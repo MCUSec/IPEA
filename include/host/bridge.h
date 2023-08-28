@@ -7,7 +7,7 @@
 #include "init.h"
 #include "target_info.h"
 
-#define AFL_MAX_RETRY   3
+#define IPEA_MAX_RETRY   3
 
 /* Trace analysis results */
 #define TRACE_RES_NORMAL          0     /* No memory error */
@@ -25,26 +25,6 @@
 #define TARGET_AGAIN   3
 #define TARGET_ERROR   4
 
-
-#define AFL_EV_RTT_INIT     RTT_INIT_FLAG
-#define AFL_EV_START        FUZZ_START_FLAG
-#define AFL_EV_FINISH       FUZZ_STOP_FLAG
-#define AFL_EV_ABORT        FUZZ_ABORT_FLAG
-#define AFL_EV_FAULT        FUZZ_FAULT_FLAG
-
-#define AFL_DFA_ERR_OK  0
-#define AFL_DFA_ERR_UNEXPECTED  1
-#define AFL_DFA_ERR_TIMEOUT 2
-#define AFL_DFA_ERR_FATAL 3
-
-enum TargetStatus {
-    INIT = 0,
-    START,
-    RUN,
-    TERMINATED,
-    TIMEOUT,
-    ERROR
-};
 
 #ifdef __cplusplus
 extern "C" {
