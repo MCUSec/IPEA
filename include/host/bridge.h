@@ -50,9 +50,9 @@ enum TargetStatus {
 extern "C" {
 #endif
 
-void AFL_JLinkInit(target_info_t *, const char *config_file, bool skip_download);
+void IPEA_DebuggerInit(target_info_t *, const char *config_file, bool skip_download);
 
-void AFL_JLinkShutdown(const target_info_t *target_info);
+void IPEA_DebuggerShutdown(const target_info_t *target_info);
 
 void Context_GlobalInit(void);
 
@@ -72,7 +72,7 @@ void RTT_DumpCallstack(const char *outfile);
 
 int RTT_Decode(const target_info_t *, int exec_index, U8 *bitmap, int *result);
 
-int AFL_RunTarget(const target_info_t *, 
+int IPEA_RunTarget(const target_info_t *, 
                     int exec_index, 
                     U8 *testcase, 
                     U32 size, 
@@ -82,8 +82,6 @@ int AFL_RunTarget(const target_info_t *,
                     bool persist_mode, 
                     bool profiling,
                     bool verbose);
-
-int AFL_GetBitmap(const target_info_t *, int exec_index, U8 *bitmap);
 
 #ifdef __cplusplus
 }

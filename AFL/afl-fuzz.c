@@ -2312,7 +2312,7 @@ static u8 run_target(char** argv, u32 timeout) {
   MEM_BARRIER();
 
   while (retry > 0) {
-    status = AFL_RunTarget(&target_info, 
+    status = IPEA_RunTarget(&target_info, 
                             total_execs, 
                             etm_tc, 
                             etm_tc_len, 
@@ -2331,7 +2331,7 @@ static u8 run_target(char** argv, u32 timeout) {
   
   // ETMFuzz
   // do {
-  //   exec_ms = AFL_GetBitmap(trace_bits, exec_tmout, etm_tc, etm_tc_len);
+  //   exec_ms = IPEA_TraceDecode(trace_bits, exec_tmout, etm_tc, etm_tc_len);
   // } while (exec_ms == (0 - RETRY) && --retry > 0);
 
   // if(exec_ms == (0 - TIMEOUT) || exec_ms == (0 - RETRY)){
@@ -7962,7 +7962,7 @@ int main(int argc, char** argv) {
 
   // Init Jtrace hardware
   parse_target(target_path, &target_info);
-  AFL_JLinkInit(&target_info, config_file, skip_download);
+  IPEA_DebuggerInit(&target_info, config_file, skip_download);
   Context_GlobalInit();
   // ETMFuzz end
   perform_dry_run(use_argv);
@@ -8069,7 +8069,7 @@ int main(int argc, char** argv) {
 
 stop_fuzzing:
 
-  AFL_JLinkShutdown(&target_info);
+  IPEA_DebuggerShutdown(&target_info);
 
   SAYF(CURSOR_SHOW cLRD "\n\n+++ Testing aborted %s +++\n" cRST,
        stop_soon == 2 ? "programmatically" : "by user");

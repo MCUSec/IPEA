@@ -137,12 +137,12 @@ int main(int argc, char *argv[])
 		profiling = false;
 	}
 
-	AFL_JLinkInit(&target_info, probe_conf_path, skip_download);
+	IPEA_DebuggerInit(&target_info, probe_conf_path, skip_download);
 
 	// FIXME
 	Context_GlobalInit();
 	
-	r = AFL_RunTarget(&target_info, 0, testcase, tc_size, target_timeout, &runtime, NULL, false, profiling, true);
+	r = IPEA_RunTarget(&target_info, 0, testcase, tc_size, target_timeout, &runtime, NULL, false, profiling, true);
 
 	printf("Total runtime: %u ms\n", runtime);
 
@@ -167,6 +167,6 @@ int main(int argc, char *argv[])
 		testcase = NULL;
 	}
 	
-	AFL_JLinkShutdown(&target_info);
+	IPEA_DebuggerShutdown(&target_info);
     return r;
 }

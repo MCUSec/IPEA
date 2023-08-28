@@ -87,11 +87,11 @@ $ cat tracelog_0.txt
 [2023-07-15 02:41:04.555] [init] [info] Assigned tag for global variable 's_uartHandle': 0xabd0,  address: 0x1fff02c8, length: 24
 [2023-07-15 02:41:04.555] [init] [info] Assigned tag for global variable 's_uartIsr': 0xabd1,  address: 0x1fff02e0, length: 4
 [2023-07-15 02:41:04.555] [init] [info] Assigned tag for global variable 'heap_end': 0xabd2,  address: 0x1fff02e4, length: 4
-[2023-07-15 02:41:04.555] [AFL_RunTarget] [info] RTT initialized
-[2023-07-15 02:41:04.557] [AFL_RunTarget] [info] Reach fuzz start point
-[2023-07-15 02:41:04.558] [AFL_RunTarget] [info] Written testcase: 5 bytes
-[2023-07-15 02:41:04.559] [AFL_RunTarget] [info] Target is running
-[2023-07-15 02:41:04.560] [AFL_RunTarget] [info] Terminated. Execution time: 2 ms
+[2023-07-15 02:41:04.555] [IPEA_RunTarget] [info] RTT initialized
+[2023-07-15 02:41:04.557] [IPEA_RunTarget] [info] Reach fuzz start point
+[2023-07-15 02:41:04.558] [IPEA_RunTarget] [info] Written testcase: 5 bytes
+[2023-07-15 02:41:04.559] [IPEA_RunTarget] [info] Target is running
+[2023-07-15 02:41:04.560] [IPEA_RunTarget] [info] Terminated. Execution time: 2 ms
 [2023-07-15 02:41:04.562] [RTT_Decode] [debug] Total trace size: 69 bytes
 [2023-07-15 02:41:04.562] [Subroutine] [debug] Assigned tag 0x55e99 for local variable 'of_stack' @ 0x2002ffe8
 [2023-07-15 02:41:04.562] [Subroutine] [debug] Assigned tag 0x55ea1 for local variable 'of_heap' @ 0x2002ffe4
@@ -105,7 +105,7 @@ $ cat tracelog_0.txt
 [2023-07-15 02:41:04.562] [handleRandom] [debug] Basic block random number: 26920 ( 0x6928 )
 [2023-07-15 02:41:04.562] [handleCheck] [info] Checking pointer dereference: pointer_id = 0x6002ffe8, address = 0x2002ffe8, length = 17
 [2023-07-15 02:41:04.562] [handleCheck] [info] Stack buffer overflow detected @ 0x2002fff8, expected tag: 0x55e99, real tag: 0x0
-[2023-07-15 02:41:04.562] [AFL_RunTarget] [info] Trace analysis result: 1
+[2023-07-15 02:41:04.562] [IPEA_RunTarget] [info] Trace analysis result: 1
 ```
 
 
