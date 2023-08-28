@@ -1258,7 +1258,7 @@ namespace{
 
             assert(numOperands == 2 || numOperands == 3);
 
-            auto wrapperName = "__usan_" + call_inst->getCalledFunction()->getName();
+            auto wrapperName = "__ipeasan_" + call_inst->getCalledFunction()->getName();
             auto destId = getPointerIDObject(call_inst->getArgOperand(0));
             auto srcId = getPointerIDObject(call_inst->getArgOperand(1));
 
@@ -1266,22 +1266,22 @@ namespace{
 
             if (numOperands == 2) {
                 // strcpy or strcat
-                if (wrapperName.str() == "__usan_strcpy" || wrapperName.str() == "__usan_strcat") {
+                if (wrapperName.str() == "__ipeasan_strcpy" || wrapperName.str() == "__ipeasan_strcat") {
                     F = M->getOrInsertFunction(wrapperName.str(), 
                                 FunctionType::get(Int8PtrType, {Int8PtrType, Int8PtrType, Int32Type, Int32Type}, false));
                 } else {
-                    assert(wrapperName.str() == "__usan_wcscpy" || wrapperName.str() == "__usan_wcscat");
+                    assert(wrapperName.str() == "__ipeasan_wcscpy" || wrapperName.str() == "__ipeasan_wcscat");
                     F = M->getOrInsertFunction(wrapperName.str(), 
                                 FunctionType::get(wCharPtrType, {wCharPtrType, wCharPtrType, Int32Type, Int32Type}, false));
                 }
                 newCI = IRB.CreateCall(F, {call_inst->getArgOperand(0), call_inst->getArgOperand(1), destId, srcId}); 
             } else {
                 // strncpy or strncat
-                if (wrapperName.str() == "__usan_strncpy" || wrapperName.str() == "__usan_strncat") {
+                if (wrapperName.str() == "__ipeasan_strncpy" || wrapperName.str() == "__ipeasan_strncat") {
                     F = M->getOrInsertFunction(wrapperName.str(), 
                                 FunctionType::get(Int8PtrType, {Int8PtrType, Int8PtrType, Int32Type, Int32Type, Int32Type}, false));
                 } else {
-                    assert(wrapperName.str() == "__usan_wcsncpy" || wrapperName.str() == "__usan_wcsncat");
+                    assert(wrapperName.str() == "__ipeasan_wcsncpy" || wrapperName.str() == "__ipeasan_wcsncat");
                     F = M->getOrInsertFunction(wrapperName.str(), 
                                 FunctionType::get(wCharPtrType, {wCharPtrType, wCharPtrType, Int32Type, Int32Type, Int32Type}, false));
                 }
@@ -1387,7 +1387,7 @@ namespace{
             if (isa<ConstantInt>(taskParamId) && cast<ConstantInt>(taskParamId)->isZeroValue())
                 return;
 
-            auto FC = M->getOrInsertFunction("__usan_trace_new_thread", FunctionType::get(VoidType, Int32Type, false));
+            auto FC = M->getOrInsertFunction("__ipeasan_trace_new_thread", FunctionType::get(VoidType, Int32Type, false));
             IRB.CreateCall(FC, taskParamId);
         }
 
@@ -1474,9 +1474,9 @@ namespace{
                 func->getName().equals(StringRef("vswprintf")))) {
                 handleSprintf(call_inst);
                 return;
-            }else if(func && func->getName().equals(StringRef("__usan_"))){
+            }else if(func && func->getName().equals(StringRef("__ipeasan_"))){
                 #if DEBUG_MODE
-                    errs() << "ignored __usan_\n";
+                    errs() << "ignored __ipeasan_\n";
                 #endif
                 return;
             }else if(func && isIgnoredFunc(func->getName().str())){
@@ -1562,7 +1562,7 @@ namespace{
             IRBuilder<> IRB(AI);
             IRB.SetInsertPoint(AI->getNextNonDebugInstruction());
             auto M = AI->getModule();
-            auto F = M->getOrInsertFunction("__usan_trace_alloca", FunctionType::get(VoidType, {Int32Type, Int32Type, Int32Type}, false));
+            auto F = M->getOrInsertFunction("__ipeasan_trace_alloca", FunctionType::get(VoidType, {Int32Type, Int32Type, Int32Type}, false));
             auto id = getPointerIDObject(AI);
             auto alloca_addr = IRB.CreatePtrToInt(AI, Int32Type, "alloca.addr");
 
@@ -2379,7 +2379,7 @@ namespace{
                         Function* func = call_inst->getCalledFunction();
                         if (func) {
                             auto name = func->getName();
-                            if(name.contains(StringRef("__usan_"))){
+                            if(name.contains(StringRef("__ipeasan_"))){
                                 #if DEBUG_MODE
                                     errs() << "mem instrumented\n";
                                 #endif
@@ -2806,30 +2806,30 @@ namespace{
             cb_fuzz_init = module.getOrInsertFunction("FuzzInit", FunctionType::get(VoidType, false));
             cb_fuzz_finish = module.getOrInsertFunction("FuzzFinish", FunctionType::get(VoidType, false));
            
-            cb_irq_entry = module.getOrInsertFunction("__usan_trace_irq_entry", FunctionType::get(VoidType, false));
-            segger_rtt_exit_irq = module.getOrInsertFunction("__usan_trace_irq_exit", FunctionType::get(VoidType, {Int16Type}, false));
+            cb_irq_entry = module.getOrInsertFunction("__ipeasan_trace_irq_entry", FunctionType::get(VoidType, false));
+            segger_rtt_exit_irq = module.getOrInsertFunction("__ipeasan_trace_irq_exit", FunctionType::get(VoidType, {Int16Type}, false));
 
-            cb_bb_entry = module.getOrInsertFunction("__usan_trace_basicblock", FunctionType::get(VoidType, {Int16Type}, false));
+            cb_bb_entry = module.getOrInsertFunction("__ipeasan_trace_basicblock", FunctionType::get(VoidType, {Int16Type}, false));
             
-            cb_func_entry = module.getOrInsertFunction("__usan_trace_func_entry", FunctionType::get(VoidType, {Int32Type}, false));
-            cb_func_entry_stack = module.getOrInsertFunction("__usan_trace_func_entry_stack", FunctionType::get(VoidType, {Int32Type}, false));
+            cb_func_entry = module.getOrInsertFunction("__ipeasan_trace_func_entry", FunctionType::get(VoidType, {Int32Type}, false));
+            cb_func_entry_stack = module.getOrInsertFunction("__ipeasan_trace_func_entry_stack", FunctionType::get(VoidType, {Int32Type}, false));
 
-            cb_func_entry_prop = module.getOrInsertFunction("__usan_trace_func_entry_prop", FunctionType::get(VoidType, {Int32Type}, false));
-            cb_func_entry_stack_prop = module.getOrInsertFunction("__usan_trace_func_entry_stack_prop", FunctionType::get(VoidType, {Int32Type}, false));
+            cb_func_entry_prop = module.getOrInsertFunction("__ipeasan_trace_func_entry_prop", FunctionType::get(VoidType, {Int32Type}, false));
+            cb_func_entry_stack_prop = module.getOrInsertFunction("__ipeasan_trace_func_entry_stack_prop", FunctionType::get(VoidType, {Int32Type}, false));
 
-            cb_prop = module.getOrInsertFunction("__usan_trace_prop", FunctionType::get(VoidType, {Int32Type, Int32Type}, false));
+            cb_prop = module.getOrInsertFunction("__ipeasan_trace_prop", FunctionType::get(VoidType, {Int32Type, Int32Type}, false));
            
-            cb_func_exit = module.getOrInsertFunction("__usan_trace_func_exit", FunctionType::get(VoidType, false));
-            cb_func_exit_prop = module.getOrInsertFunction("__usan_trace_func_exit_prop", FunctionType::get(VoidType, {Int32Type}, false));
+            cb_func_exit = module.getOrInsertFunction("__ipeasan_trace_func_exit", FunctionType::get(VoidType, false));
+            cb_func_exit_prop = module.getOrInsertFunction("__ipeasan_trace_func_exit_prop", FunctionType::get(VoidType, {Int32Type}, false));
 
             /* SEGGER_RTT_Write_ArgProp(uint8_t args, ...) */
-            cb_arg_prop = module.getOrInsertFunction("__usan_trace_callsite", FunctionType::get(VoidType, {Int8Type}, true));
-            cb_ret_prop = module.getOrInsertFunction("__usan_trace_return_prop", FunctionType::get(VoidType,{Int32Type},false));
+            cb_arg_prop = module.getOrInsertFunction("__ipeasan_trace_callsite", FunctionType::get(VoidType, {Int8Type}, true));
+            cb_ret_prop = module.getOrInsertFunction("__ipeasan_trace_return_prop", FunctionType::get(VoidType,{Int32Type},false));
 
-            cb_malloc = module.getOrInsertFunction("__usan_trace_malloc", FunctionType::get(VoidType, {Int32Type, Int32Type, Int32Type}, false));
-            cb_free = module.getOrInsertFunction("__usan_trace_free", FunctionType::get(VoidType, {Int32Type}, false));
-            cb_realloc = module.getOrInsertFunction("__usan_trace_realloc", FunctionType::get(VoidType, {Int32Type, Int32Type, Int32Type, Int32Type}, false));
-            cb_load_store_check = module.getOrInsertFunction("__usan_trace_load_store", FunctionType::get(VoidType, {Int32Type, Int32Type, Int32Type}, false));
+            cb_malloc = module.getOrInsertFunction("__ipeasan_trace_malloc", FunctionType::get(VoidType, {Int32Type, Int32Type, Int32Type}, false));
+            cb_free = module.getOrInsertFunction("__ipeasan_trace_free", FunctionType::get(VoidType, {Int32Type}, false));
+            cb_realloc = module.getOrInsertFunction("__ipeasan_trace_realloc", FunctionType::get(VoidType, {Int32Type, Int32Type, Int32Type, Int32Type}, false));
+            cb_load_store_check = module.getOrInsertFunction("__ipeasan_trace_load_store", FunctionType::get(VoidType, {Int32Type, Int32Type, Int32Type}, false));
             #if TARGET_CONFIG==5
                 closed_func["log_backend_activate"] = true;
                 closed_func["log_backend_dropped"] = true;
