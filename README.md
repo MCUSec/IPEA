@@ -84,7 +84,7 @@ For details, please refer to our paper published in NDSS'24.
 
 2. Install J-Link Runtime Library
     - Download from https://www.segger.com/downloads/jlink/JLink_Linux_V758e_x86_64.tgz
-    - Extract and copy ``libjlinkarm.so.7.58.5`` to ``/usr/lib`` directory:
+    - Extract the shared object file ``libjlinkarm.so.7.58.5`` from the downloaded package and copy it to ``/usr/lib`` directory:
         ````bash
         $ sudo cp /path/to/JLink_Linux_V758e_x86_64/libjlinkarm.so.7.58.5 /usr/lib
         $ sudo ldconfig
@@ -104,7 +104,7 @@ package from the official [website](https://developer.arm.com/downloads/-/gnu-rm
    
 
 5. Install `spdlog`
-    ```bashrc
+    ```bash
     $ git clone https://github.com/gabime/spdlog.git
     $ mkdir -p spdlog/build
     $ cd spdlog/build && cmake ..
@@ -164,7 +164,7 @@ Arguments:
 
 ## Usage
 
-#### Taming the firmware source code
+### Taming the firmware source code
 
 This step needs the full knowledge of the firmware behavior. Here, we illustrate the generic procedure of taming the target source code.
 
@@ -204,7 +204,7 @@ This step needs the full knowledge of the firmware behavior. Here, we illustrate
 6. Annotate functions that no need to be sanitized, such as system initialization (e.g., ``SystemInit()``) that invoked by the reset handler with ``__attribute__((annotate("no_instrument")))``.
 7. Annotate interrupt handlers with `__attribute__((annotate("interruptHandler")))`.
 
-#### Compile the firmware with IPEA-San
+### Compile the firmware with IPEA-San
 
 - Add following flags to ``Makefile`` and compile the firmware:
     ```lang-makefile
@@ -220,13 +220,13 @@ This step needs the full knowledge of the firmware behavior. Here, we illustrate
     ...
     ```
 
-#### Hardware wiring
+### Hardware wiring
 
 - For NXP FRDM-K64F, connect J-Link or J-Trace to Pin J9 with 10-pin cable.
 - For STM32 Nucleo-F446RE, only onboard J-Link is avaliable since no debug port is present. To make ST-LINK compatible with J-Link onboard, please refer to this [link](https://www.segger.com/products/debug-probes/j-link/models/other-j-links/st-link-on-board/).
 - For STM32H7B3I-EVAL, connect J-Link or J-Trace to Pin CN15 with 20-pin cable.
 
-#### Start fuzzing
+### Start fuzzing
 
 IPEA-Fuzz needs to collect target information from the ELF-format file and pass them to the fuzzer. Please use ``run_afl.py`` to run `ipea-fuzz`. 
 
@@ -243,7 +243,7 @@ Arguments:
 
 The fuzzing result will be saved in `output` directory.
 
-#### Test a usecase
+### Test an input
 
 Please use `ipea-unittest` to run the firmware with a specific input. Command line usage:
 ```bash
@@ -268,7 +268,7 @@ $ ssh -X ndss24@24.199.78.229         # password: ndss24
 $ ssh -X -p 2222 ndss24_ae@localhost
 ```
 
-**NOTE**: X11 forwarding must be enabled. Please don't omit `-X` parameter in the command lines. For Windows and Mac users, please refer to this [instruction](docs/x11.md).
+>**NOTE**: X11 forwarding must be enabled. Please don't omit `-X` parameter in the command lines. For Windows and Mac users, please refer to this [instruction](docs/x11.md).
 
 ### IPEA-San Evaluation
 
@@ -296,8 +296,8 @@ Then, run `Toy` with a string input (e.g., '`axxxx`' which will trigger stack bu
 $ echo 'axxxx' | run_unittest.py -b toy -t 1000
 ```
 
-**NOTE**: When running `ipea-unittest` (and `ipea-fuzz`), a pop-up window would appear to indicate the progress of firmware downloading.
-If using a J-Link Edu/Edu mini/OB, you will be asked to agree the agreement of usage. 
+>**NOTE**: When running `ipea-unittest`, a pop-up window would appear to indicate the progress of firmware downloading.
+If using a J-Link Edu/Edu mini/OB, you will be asked to accept the agreement of usage. 
 
 Arguments:
 
@@ -357,7 +357,8 @@ By fuzz-testing `Toy` firmware, all the memory errors listed aboved should be ca
 ```bash
 $ run_afl.py -b toy -i ./fuzz_input -t 1000
 ```
-
+>**NOTE**: When running `ipea-fuzz`, a pop-up window would appear to indicate the progress of firmware downloading.
+If using a J-Link Edu/Edu mini/OB, you will be asked to accept the agreement of usage. 
 Arguments:
 
 - `-b`: the path of firmware
