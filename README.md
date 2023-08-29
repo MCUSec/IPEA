@@ -244,7 +244,7 @@ $ run_afl.py -b /path/to/firmware.elf -c /path/to/jlink.conf -i /path/to/input -
 Arguments:
 
 - `-b`: specify the ELF-format firmware
-- `-c`: specify the configuration file path of J-Link and target MCU
+- `-c`: specify the configuration file path of J-Link and target MCU (see [docs/template.conf](docs/template.conf))
 - `-i`: specify the path of inputs
 - `-t`: specify the timeout in milliseconds
 
