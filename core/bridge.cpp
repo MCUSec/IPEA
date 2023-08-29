@@ -26,9 +26,29 @@
 #define WAIT_BEFORE_MAIN            10000
 #define WAIT_FUZZ_STOP              200000
 
+#define TARGET_EVENT_RTT_INIT     RTT_INIT_FLAG
+#define TARGET_EVENT_START        FUZZ_START_FLAG
+#define TARGET_EVENT_FINISH       FUZZ_STOP_FLAG
+#define TARGET_EVENT_ABORT        FUZZ_ABORT_FLAG
+#define TARGET_EVENT_FAULT        FUZZ_FAULT_FLAG
+
+#define IPEA_STATE_OK  0
+#define IPEA_STATE_UNEXPECTED  1
+#define IPEA_STATE_TIMEOUT 2
+#define IPEA_STATE_FATAL 3
+
+enum TargetStatus {
+    INIT = 0,
+    START,
+    RUN,
+    TERMINATED,
+    TIMEOUT,
+    ERROR
+};
+
 std::shared_ptr<spdlog::sinks::basic_file_sink_mt> file_sink = nullptr;
 
-void AFL_JLinkInit(target_info_t *target_info, const char *config_file, bool skip_download)
+void IPEA_DebuggerInit(target_info_t *target_info, const char *config_file, bool skip_download)
 {	
 	INIT_PARAS _Paras;
     InitJLink(&_Paras, target_info, config_file);
@@ -38,13 +58,13 @@ void AFL_JLinkInit(target_info_t *target_info, const char *config_file, bool ski
 		RTT_Init(target_info);
 }
 
-void AFL_JLinkShutdown(const target_info_t *target_info)
+void IPEA_DebuggerShutdown(const target_info_t *target_info)
 {
 	RTT_Deinit(target_info);
 	CloseDebugSession(target_info);
 }
 
-static inline bool AFL_WriteTestCase(const target_info_t *target_info, U8 *testcase, U32 size)
+static inline bool _WriteInput(const target_info_t *target_info, U8 *testcase, U32 size)
 {
 	if (!TARGET_IN_FUZZ_MODE(target_info) || !testcase || !size)
 		return false;
@@ -61,7 +81,7 @@ static inline bool AFL_WriteTestCase(const target_info_t *target_info, U8 *testc
 }
 
 
-static int AFL_WaitEvent(const U8 expected, const U32 timeout, U8 *happend = nullptr)
+static int _WaitEvent(const U8 expected, const U32 timeout, U8 *happend = nullptr)
 {
 	U32 regPC;
 	U16 fetchedInst;
@@ -79,24 +99,24 @@ static int AFL_WaitEvent(const U8 expected, const U32 timeout, U8 *happend = nul
 			*happend = happendEvent;
 
 		if (happendEvent != expected)
-			return AFL_DFA_ERR_UNEXPECTED;
+			return IPEA_STATE_UNEXPECTED;
 
-		return AFL_DFA_ERR_OK;
+		return IPEA_STATE_OK;
 	} else if (r == 0) {
-		return AFL_DFA_ERR_TIMEOUT;
+		return IPEA_STATE_TIMEOUT;
 	} else {
 		spdlog::error("JLINKARM_WaitForHalt() error: {}", r);
-		return AFL_DFA_ERR_FATAL;
+		return IPEA_STATE_FATAL;
 	}
 }
 
-static inline void ResetTarget(const target_info_t *target_info)
+static inline void _ResetTarget(const target_info_t *target_info)
 {
 	JLINKARM_Reset();
 	JLINKARM_WriteReg((ARM_REG)JLINKARM_CM3_REG_R15, target_info->p_entry);
 }
 
-static void ProcessTimeout(const target_info_t *target_info)
+static void _ProcessTimeout(const target_info_t *target_info)
 {
 	uint8_t rtt_locked = 1;
 
@@ -115,7 +135,32 @@ static void ProcessTimeout(const target_info_t *target_info)
 	} while (rtt_locked);
 }
 
-int AFL_RunTarget(const target_info_t *target_info, 
+static int _TraceDecode(const target_info_t *target_info, int exec_index, U8 *bitmap)
+{
+	int res = TRACE_RES_NORMAL;
+
+	if (RTT_Decode(target_info, exec_index, bitmap, &res))
+		return TRACE_ERR;
+
+	return res;
+}
+
+/**
+ * @brief 
+ * 
+ * @param target_info 
+ * @param exec_index 
+ * @param testcase 
+ * @param size 
+ * @param timeout 
+ * @param exec_ms 
+ * @param bitmap 
+ * @param persist_mode 
+ * @param profiling 
+ * @param verbose 
+ * @return int 
+ */
+int IPEA_RunTarget(const target_info_t *target_info, 
 					int exec_index, 
 					U8 *testcase, 
 					U32 size, 
@@ -153,7 +198,7 @@ int AFL_RunTarget(const target_info_t *target_info,
 
 	// Reset target
 	if (!persist_mode || exec_index == 0) {
-		ResetTarget(target_info);
+		_ResetTarget(target_info);
 	} else {
 		if (TARGET_IN_TRACE_MODE(target_info)) {
 			Start_RTT(target_info, exec_index, true);
@@ -176,8 +221,8 @@ int AFL_RunTarget(const target_info_t *target_info,
 		
 		switch (status) {
 		case TargetStatus::INIT:
-			res = AFL_WaitEvent(AFL_EV_RTT_INIT, WAIT_BEFORE_RTT_INIT, &happend_event);
-			if (res == AFL_DFA_ERR_OK) {
+			res = _WaitEvent(TARGET_EVENT_RTT_INIT, WAIT_BEFORE_RTT_INIT, &happend_event);
+			if (res == IPEA_STATE_OK) {
 				if (TARGET_IN_TRACE_MODE(target_info)) { // FIXME 1
 					if (!profiling) {
 						Start_RTT(target_info, exec_index, false);
@@ -200,10 +245,10 @@ int AFL_RunTarget(const target_info_t *target_info,
 			break;
 
 		case TargetStatus::START:
-			res = AFL_WaitEvent(AFL_EV_START, WAIT_BEFORE_MAIN, &happend_event);
-			if (res == AFL_DFA_ERR_OK) {
+			res = _WaitEvent(TARGET_EVENT_START, WAIT_BEFORE_MAIN, &happend_event);
+			if (res == IPEA_STATE_OK) {
 				logger.info("Reach fuzz start point");
-				if (AFL_WriteTestCase(target_info, testcase, size)) {
+				if (_WriteInput(target_info, testcase, size)) {
 					logger.info("Written testcase: {} bytes", size);
 					status = TargetStatus::RUN;
 					initTime = getTimestamp();
@@ -219,7 +264,7 @@ int AFL_RunTarget(const target_info_t *target_info,
 
 		case TargetStatus::RUN:
 			logger.info("Target is running");
-			res = AFL_WaitEvent(AFL_EV_FINISH, timeout, &happend_event);
+			res = _WaitEvent(TARGET_EVENT_FINISH, timeout, &happend_event);
 			finiTime = getTimestamp();
 
 			if (TARGET_IN_TRACE_MODE(target_info))
@@ -229,17 +274,17 @@ int AFL_RunTarget(const target_info_t *target_info,
 				*exec_ms = finiTime - initTime;
 
 			switch(res) {
-			case AFL_DFA_ERR_OK:
-			case AFL_DFA_ERR_UNEXPECTED:
+			case IPEA_STATE_OK:
+			case IPEA_STATE_UNEXPECTED:
 				status = TargetStatus::TERMINATED;
 				break;
 
-			case AFL_DFA_ERR_TIMEOUT:
-				ProcessTimeout(target_info);
+			case IPEA_STATE_TIMEOUT:
+				_ProcessTimeout(target_info);
 				status = TargetStatus::TIMEOUT;
 				break;
 
-			case AFL_DFA_ERR_FATAL:
+			case IPEA_STATE_FATAL:
 				spdlog::error("Debug dongle error");
 				return TARGET_ERROR;
 
@@ -252,15 +297,12 @@ int AFL_RunTarget(const target_info_t *target_info,
 
 		case TargetStatus::TERMINATED:
 			logger.info("Terminated. Execution time: {} ms", finiTime - initTime);
-			target_status = happend_event == AFL_EV_FINISH ? TARGET_NORMAL : TARGET_CRASH;
+			target_status = happend_event == TARGET_EVENT_FINISH ? TARGET_NORMAL : TARGET_CRASH;
 			halt = true;
 			break;
 
 		case TargetStatus::TIMEOUT:
-			logger.info("Fuzz timeout");
-			// if (!JLINKARM_IsHalted()) {
-			// 	JLINKARM_Halt();
-			// }
+			logger.info("Timeout");
 			target_status = TARGET_TIMEOUT;
 			halt = true;
 			break;
@@ -273,7 +315,7 @@ int AFL_RunTarget(const target_info_t *target_info,
 	}
 
 	if (TARGET_IN_TRACE_MODE(target_info)) {
-		trace_res = AFL_GetBitmap(target_info, exec_index, bitmap);
+		trace_res = _TraceDecode(target_info, exec_index, bitmap);
 		if (trace_res == TRACE_ERR || trace_res == TRACE_RES_FAULT) {
 			remove(filename);
 			return TARGET_AGAIN;
@@ -303,14 +345,4 @@ int AFL_RunTarget(const target_info_t *target_info,
 		remove(filename);
 
 	return target_status;
-}
-
-int AFL_GetBitmap(const target_info_t *target_info, int exec_index, U8 *bitmap)
-{
-	int res = TRACE_RES_NORMAL;
-
-	if (RTT_Decode(target_info, exec_index, bitmap, &res))
-		return TRACE_ERR;
-
-	return res;
 }
