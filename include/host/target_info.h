@@ -59,6 +59,14 @@ typedef struct target_info target_info_t;
 extern "C" {
 #endif
 
+/**
+ * @brief Parse the target firmware
+ * 
+ * @param filename Path of the firmware
+ * @param target_info Buffer for saving the target information
+ * @return true - Target firmware parsed successfully
+ * @return false - Failed to parse the target firmware
+ */
 bool parse_target(const char *filename, target_info_t *target_info);
 
 #ifdef __cplusplus

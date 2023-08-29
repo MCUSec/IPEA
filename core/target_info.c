@@ -1,3 +1,13 @@
+/**
+ * @file target_info.c
+ * @author Jiameng Shi (jiameng@uga.edu)
+ * @brief Implementation of parsing the target firmware
+ * @version 0.1
+ * @date 2023-08-29
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -19,8 +29,8 @@
 DEF_TARGET_SYMBOL_NAME(RTTCB, "MCU_SANITIZER_SEGGER_RTT")
 DEF_TARGET_SYMBOL_NAME(trace_rx_bytes, "rtt_total_bytes")
 DEF_TARGET_SYMBOL_NAME(trace_rx_chksum, "rtt_tx_chksum")
-DEF_TARGET_SYMBOL_NAME(trace_enabled, "__usan_trace_enabled")
-DEF_TARGET_SYMBOL_NAME(trace_locked, "__usan_rtt_lock")
+DEF_TARGET_SYMBOL_NAME(trace_enabled, "__ipeasan_trace_enabled")
+DEF_TARGET_SYMBOL_NAME(trace_locked, "__ipeasan_rtt_lock")
 DEF_TARGET_SYMBOL_NAME(fuzz_inpbuf, "DeviceTestCaseBuffer")
 DEF_TARGET_SYMBOL_NAME(fuzz_input_len, "TestCaseLen")
 DEF_TARGET_SYMBOL_NAME(max_stack_usage, "__max_stack_usage")
