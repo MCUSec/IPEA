@@ -1,3 +1,13 @@
+/**
+ * @file RTT.cpp
+ * @author Jiameng Shi (jiameng@uga.edu)
+ * @brief Implementation of IPEA-San tracing
+ * @version 0.1
+ * @date 2023-08-29
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 #include <fstream>
 #include <iostream>
 #include <map>
