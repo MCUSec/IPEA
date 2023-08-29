@@ -74,7 +74,7 @@ For details, please refer to our paper published in NDSS'24.
 
 ## Getting Started
 
-#### Install dependencies
+### Install dependencies
 
 1. Install J-Link Software and Documentation pack.
     - Download from https://www.segger.com/downloads/jlink/JLink_Linux_V758e_x86_64.deb and install:
@@ -118,7 +118,7 @@ package from the official [website](https://developer.arm.com/downloads/-/gnu-rm
     $ pip install pyelftools cmsis-svd 
     ```
 
-#### Build IPEA framework
+### Build IPEA framework
 
 1. Clone source code of IPEA framework to your work directory and add the path to `IPEA_HOME` environment variable:
     ```bash
