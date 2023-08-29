@@ -2,18 +2,11 @@
 
 Facilitating Non-Intrusive In-Vivo Firmware Testing with Stateless Instrumentation
 
-## Introduction
-Although numerous dynamic testing techniques have been developed, they can hardly be directly applied to firmware of deeply embedded (e.g., microcontroller-based) devices due to the tremendously different runtime environment and restricted resources on these devices. This work tackles these challenges by leveraging the unique position of microcontroller devices during firmware development. That is, firmware de- velopers have to rely on a powerful engineering workstation that connects to the target device to program and debug code. Therefore, we develop a decoupled firmware testing framework named IPEA, which shifts the overhead of resource-intensive analysis tasks from the microcontroller to the workstation. Only lightweight “needle probes” are left in the firmware to collect internal execution information without processing it. We also instantiated this framework with a sanitizer based on pointer capability (IPEA-San) and a feedback-guided fuzzer (IPEA-Fuzz). By comparing IPEA-San with a port of AddressSanitizer for microcontrollers, we show that IPEA-San reduces the memory overhead by 73.11% in real-world firmware with better detection accuracy. Running IPEA-Fuzz with IPEA-San, we found five new bugs in real IoT libraries and peripheral driver code.
-
-For details, please refer to our paper published in NDSS'24.
-
-## License
-
-Content of this repository is licensed under GPL-3.0. See [LICENSE](LICENSE).
-
 ## Table of Contents
 
+- [Introduction](#introduction)
 - [Directory Structure](#directory-structure)
+- [License](#license)
 - [Environment](#environment)
     + [Hardware](#hardware)
     + [Host OS](#host-os)
@@ -35,6 +28,11 @@ Content of this repository is licensed under GPL-3.0. See [LICENSE](LICENSE).
   * [Fuzz-testing FRDM-K64F USB-Host Driver](#fuzz-testing-frdm-k64f-usb-host-driver)
 - [Troubleshooting](#troubleshooting)
 
+## Introduction
+Although numerous dynamic testing techniques have been developed, they can hardly be directly applied to firmware of deeply embedded (e.g., microcontroller-based) devices due to the tremendously different runtime environment and restricted resources on these devices. This work tackles these challenges by leveraging the unique position of microcontroller devices during firmware development. That is, firmware de- velopers have to rely on a powerful engineering workstation that connects to the target device to program and debug code. Therefore, we develop a decoupled firmware testing framework named IPEA, which shifts the overhead of resource-intensive analysis tasks from the microcontroller to the workstation. Only lightweight “needle probes” are left in the firmware to collect internal execution information without processing it. We also instantiated this framework with a sanitizer based on pointer capability (IPEA-San) and a feedback-guided fuzzer (IPEA-Fuzz). By comparing IPEA-San with a port of AddressSanitizer for microcontrollers, we show that IPEA-San reduces the memory overhead by 73.11% in real-world firmware with better detection accuracy. Running IPEA-Fuzz with IPEA-San, we found five new bugs in real IoT libraries and peripheral driver code.
+
+For details, please refer to our paper published in NDSS'24.
+
 ## Directory Structure
 - ``AFL``: Source code of IPEA-Fuzz (based on AFL-2.5b)
 - ``core``: Source code of IPEA-Core and IPEA-San
@@ -52,6 +50,10 @@ Content of this repository is licensed under GPL-3.0. See [LICENSE](LICENSE).
 - ``unitttest``: Unit test program for IPEA framework
 - ``build.sh``: Script of building IPEA framework
 - ``clean.sh``: Script of cleaning IPEA framework
+
+## License
+
+Content of this repository is licensed under GPL-3.0. See [LICENSE](LICENSE).
 
 ## Environment
 
