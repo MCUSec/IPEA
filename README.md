@@ -260,7 +260,7 @@ $ cat output/crashes/<use_case_name> | run_unittest.py -b /path/to/firmware.elf 
 Arguments:
 
 - `-b`: specify the path of firmware (ELF formant)
-- `-c`: specify the configuration file path of J-Link and target MCU
+- `-c`: specify the path of J-Link and target MCU configuration file
 - `-t`: specify the timeout in milliseconds (default is 1000 ms)
 
 The runtime log would be saved as `tracelog_0.txt`. If a crash dected, the call stack information would be saved as `callstack.txt`.
