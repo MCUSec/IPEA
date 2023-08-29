@@ -29,6 +29,7 @@ For details, please refer to our paper published in NDSS'24.
   * [Correctness Evaluation](#correctness-evaluation)
   * [Performance Evaluation](#performance-evaluation)
   * [Fuzz-testing FRDM-K64F USB-Host Driver](#fuzz-testing-frdm-k64f-usb-host-driver)
+- [Troubleshooting](#troubleshooting)
 
 ## Directory Structure
 - ``AFL``: Source code of IPEA-Fuzz (based on AFL-2.5b)
@@ -435,3 +436,16 @@ $ make ipea
 $ run_afl.py -b usb_host -i ./fuzz_input -t 3000
 ```
 A use-after-free bug would be found. The fuzzing result can be found from `output` directory, please test a crash usecase with `ipea-unittest` tool as described in [IPEA-Fuzz Evaluation](#IPEA-Fuzz-Evaluation).
+
+## Troubleshooting
+
+This section summerizes the common issues and corresponding solutions.
+
+- `JLinkGUIServerExe: cannot connect to X server`: This is because J-Link runtime library requires GUI support. Typically, a pop-up window would appear to indicate the progress of firmware downloading. Please use IPEA framework in the desktop environment.
+
+- `ERROR: InitTarget(): PCode returned with error code 1`: This error is typically caused by incorrect hardware wiring or the debugger itself. Please check the hardware wiring and reset your development board and the debugger.
+
+
+- `ERROR: Serial Number not exist`: Please check the J-Link serial number in the J-Link and target configuration file.
+
+- `ERROR: Failed to set device`: Please check the device name in the J-Link and target configuration file. To inquire the device name of your development board, please refer to this [page](https://www.segger.com/supported-devices/jlink/).
