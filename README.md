@@ -50,21 +50,21 @@ For details, please refer to our paper published in NDSS'24.
 
 ## Environment
 
-#### Hardware
+### Hardware
 
 - Debugger
-    - SEGGER J-Link (Pro/Edu/Edu Mini/Onboard) or J-Trace
+    - SEGGER [J-Link](https://www.segger.com/products/debug-probes/j-link/) or [J-Trace](https://www.segger.com/products/debug-probes/j-trace/)
 
 - Development boards (used in the artifact evaluation)
-    - NXP FRDM-K64F 
-    - STM32 Nucleo-F446RE
-    - STM32H7B3I-EVAL
+    - [NXP FRDM-K64F](https://www.nxp.com/design/development-boards/freedom-development-boards/mcu-boards/freedom-development-platform-for-kinetis-k64-k63-and-k24-mcus:FRDM-K64F) 
+    - [STM32 Nucleo-F446RE](https://www.st.com/en/evaluation-tools/nucleo-f446re.html)
+    - [STM32H7B3I-EVAL](https://www.st.com/en/evaluation-tools/stm32h7b3i-eval.html)
 
-#### Host OS
+### Host OS
 
 - Ubuntu 22.04 x86/64 LTS (recommended)
 
-#### Software and libraries
+### Software and libraries
 
 - J-Link Software and Documentation pack
 - J-Link Runtime Library
