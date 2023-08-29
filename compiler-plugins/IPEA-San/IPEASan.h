@@ -1,3 +1,13 @@
+/**
+ * @file IPEASan.h
+ * @author Jiameng Shi (jiameng@uga.edu)
+ * @brief Interfaces and definitions of IPEA-San plugin
+ * @version 0.1
+ * @date 2023-08-29
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 #ifndef IPEASAN_H
 #define IPEASAN_H
 

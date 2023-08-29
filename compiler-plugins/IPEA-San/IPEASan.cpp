@@ -1,3 +1,13 @@
+/**
+ * @file IPEASan.cpp
+ * @author Jiameng Shi (jiameng@uga.edu)
+ * @brief Implementation of IPEA-San plugin
+ * @version 0.1
+ * @date 2023-08-29
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 #include "llvm/Pass.h"
 #include "llvm/IR/Instruction.h"
 #include "llvm/IR/BasicBlock.h"
