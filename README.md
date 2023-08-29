@@ -364,7 +364,7 @@ By fuzz-testing `Toy` firmware, all the memory errors listed aboved should be ca
 ```bash
 $ run_afl.py -b toy -i ./fuzz_input -t 1000
 ```
->**NOTE**: When running `ipea-fuzz`, a pop-up window would appear to indicate the progress of firmware downloading.
+>*NOTE*: When running `ipea-fuzz`, a pop-up window would appear to indicate the progress of firmware downloading.
 If using a J-Link Edu/Edu mini/OB, you will be asked to accept the agreement of usage. 
 Arguments:
 
@@ -445,7 +445,7 @@ A use-after-free bug would be found. The fuzzing result can be found from `outpu
 
 ## Troubleshooting
 
-This section summerizes the common issues and corresponding solutions. If you encounter any other problems while using IPEA framework, please open an issue.
+This section summerizes the common issues while using `ipea-unittest` and `ipea-fuzz` and corresponding solutions. If you encounter any other problems, please open an issue.
 
 - `JLinkGUIServerExe: cannot connect to X server`: This is because J-Link runtime library requires GUI support. Typically, a pop-up window would appear to indicate the progress of firmware downloading. Please use IPEA framework in the desktop environment.
 
