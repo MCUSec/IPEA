@@ -149,25 +149,6 @@ By the above steps, the following components will be built:
 - `ipea-unittest`: a unit testing program of **IPEA-San**. It is responsible for verifying the capability of capturing memory-related errors in the target firmware. This program will download the instrumented firmware to the target MCU and run it. An error will be returned if any memory error detected.
 
 - `ipea-fuzz`: the main program of **IPEA-Fuzz**, an AFL-based, coverage-guided fuzzer. Like fuzzing x86_64 applications on a PC, it generates test cases and feeds to the target MCU and receives code coverage feedbacks via the debug dongle (i.e., a J-Link Probe). 
-<!-- #### Run the target with IPEA-San
-
-Once the firmware has been compiled with IPEA-San, the firmware can be executed with ``ipea-unittest`` program. It is responsible for:
-- Downloading the firmware to the target MCU
-- Boostrapping the MCU
-- Receiving and analyzing the runtime trace of the firmware
-
-Command line usage:
-
-```Bash
-$ run_unittest.py -b /path/to/firmware.elf -c /path/to/jlink.conf [-t <timeout>]
-```
-
-Arguments:
-
-- `-b`: specify the path of firmware (ELF formant)
-- `-c`: specify the configuration file path of J-Link and target MCU
-- `-t`: specify the timeout in milliseconds (default is 1000 ms) -->
-
 
 ## Usage
 
@@ -366,6 +347,7 @@ $ run_afl.py -b toy -i ./fuzz_input -t 1000
 ```
 >*NOTE*: When running `ipea-fuzz`, a pop-up window would appear to indicate the progress of firmware downloading.
 If using a J-Link Edu/Edu mini/OB, you will be asked to accept the agreement of usage. 
+
 Arguments:
 
 - `-b`: the path of firmware
@@ -389,7 +371,7 @@ Juliet C/C++ Testsuite is used for evaluating the correctness of sanitizers.
     ```
 - Evaluate the correctness of IPEA-San
   
-  **NOTE**: This experiment may take a long time. `--max-run=10` makes the script run only 10 programs.
+  >*NOTE*: This experiment may take a long time. `--max-run=10` makes the script run only 10 programs.
 
     ```bash
     $ run_juliet.py -p . -c mk64f.conf --max-run=10   # Test the correctness of IPEA-San
@@ -397,7 +379,7 @@ Juliet C/C++ Testsuite is used for evaluating the correctness of sanitizers.
 
 - Evaluate the correctness of ASan
 
-  **NOTE**: This experiment may take a long time. `--max-run=10` makes the script run only 10 programs. 
+  >*NOTE*: This experiment may take a long time. `--max-run=10` makes the script run only 10 programs. 
 
     ```bash
     $ run_juliet.py -p . -c mk64f.conf --max-run=10 --uss-asan    # Test the correctness of ASan
