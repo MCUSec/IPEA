@@ -7,6 +7,10 @@ Although numerous dynamic testing techniques have been developed, they can hardl
 
 For details, please refer to our paper published in NDSS'24.
 
+## License
+
+Content of this repository is licensed under GPL-3.0. See [LICENSE](LICENSE).
+
 ## Table of Contents
 
 - [Directory Structure](#directory-structure)
@@ -269,7 +273,7 @@ $ ssh -X ndss24@24.199.78.229         # password: ndss24
 $ ssh -X -p 2222 ndss24_ae@localhost
 ```
 
->**NOTE**: X11 forwarding must be enabled. Please don't omit `-X` parameter in the command lines. For Windows and Mac users, please refer to this [instruction](docs/x11.md).
+>*NOTE*: X11 forwarding must be enabled. Please don't omit `-X` parameter in the command lines. For Windows and Mac users, please refer to this [instruction](docs/x11.md).
 
 ### IPEA-San Evaluation
 
@@ -297,7 +301,7 @@ Then, run `Toy` with a string input (e.g., '`axxxx`' which will trigger stack bu
 $ echo 'axxxx' | run_unittest.py -b toy -t 1000
 ```
 
->**NOTE**: When running `ipea-unittest`, a pop-up window would appear to indicate the progress of firmware downloading.
+>*NOTE*: When running `ipea-unittest`, a pop-up window would appear to indicate the progress of firmware downloading.
 If using a J-Link Edu/Edu mini/OB, you will be asked to accept the agreement of usage. 
 
 Arguments:
@@ -439,7 +443,7 @@ A use-after-free bug would be found. The fuzzing result can be found from `outpu
 
 ## Troubleshooting
 
-This section summerizes the common issues and corresponding solutions.
+This section summerizes the common issues and corresponding solutions. If you encounter any other problems while using IPEA framework, please open an issue.
 
 - `JLinkGUIServerExe: cannot connect to X server`: This is because J-Link runtime library requires GUI support. Typically, a pop-up window would appear to indicate the progress of firmware downloading. Please use IPEA framework in the desktop environment.
 
