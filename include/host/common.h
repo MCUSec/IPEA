@@ -1,3 +1,13 @@
+/**
+ * @file common.h
+ * @author Jiameng Shi (jiameng@uga.edu)
+ * @brief Common definitions
+ * @version 0.1
+ * @date 2023-08-29
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 #ifndef __COMMON_H__
 #define __COMMON_H__
 

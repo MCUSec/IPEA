@@ -1,3 +1,13 @@
+/**
+ * @file fuzz.h
+ * @author Jiameng Shi (jiameng@uga.edu)
+ * @brief Interfaces of fuzz triggers
+ * @version 0.1
+ * @date 2023-08-29
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 #ifndef __FUZZ_H__
 #define __FUZZ_H__
 

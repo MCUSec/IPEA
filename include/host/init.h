@@ -1,3 +1,13 @@
+/**
+ * @file init.h
+ * @author Jiameng Shi (jiameng@uga.edu)
+ * @brief Interfaces and definitions for J-Link module
+ * @version 0.1
+ * @date 2023-08-29
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 #ifndef __INIT_H__
 #define __INIT_H__
 
@@ -46,17 +56,39 @@ typedef struct {
 extern "C" {
 #endif
 
+/**
+ * @brief Initialize the J-Link probe
+ * 
+ * @param config_file Path of the configuration file
+ */
 void InitJLink(INIT_PARAS *, target_info_t *, const char *config_file);
 
+/**
+ * @brief Initialize a debug session
+ * 
+ */
 void InitDebugSession(INIT_PARAS *);
 
+/**
+ * @brief Close a debug session
+ * 
+ * @param target_info Target information
+ */
 void CloseDebugSession(const target_info_t *target_info);
 
-void ResetDebugSession(INIT_PARAS *_Paras);
+/**
+ * @brief Reset a debug information
+ * 
+ */
+void ResetDebugSession(INIT_PARAS *);
 
+/**
+ * @brief Initialize the firmware
+ * 
+ * @param target_info Target information
+ * @param skip_download Indicates whether skip firmware downloading
+ */
 void InitFirmware(const target_info_t *target_info, bool skip_download);
-
-void GetInitParameters(INIT_PARAS *, FILE *);
 
 #ifdef __cplusplus
 }

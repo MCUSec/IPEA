@@ -1,3 +1,13 @@
+/**
+ * @file device_config.h
+ * @author Jiameng Shi (jiameng@uga.edu)
+ * @brief Definitions for target device
+ * @version 0.1
+ * @date 2023-08-29
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 #ifndef __DEVICE_CONFIG_H__
 #define __DEVICE_CONFIG_H__
 

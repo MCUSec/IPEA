@@ -1,3 +1,13 @@
+/**
+ * @file fuzz.c
+ * @author Jiameng Shi (jiameng@uga.edu)
+ * @brief Implementation of fuzz triggers
+ * @version 0.1
+ * @date 2023-08-29
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 #include "fuzz.h"
 #include "device_config.h"
 

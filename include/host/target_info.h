@@ -1,3 +1,13 @@
+/**
+ * @file target_info.h
+ * @author Jiameng Shi (jiameng@uga.edu)
+ * @brief Interfaces and definitions for target information
+ * @version 0.1
+ * @date 2023-08-29
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 #ifndef TARGET_INFO_H
 #define TARGET_INFO_H
 

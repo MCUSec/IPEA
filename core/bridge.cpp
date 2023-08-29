@@ -1,3 +1,14 @@
+/**
+ * @file bridge.cpp
+ * @author Jiameng Shi (jiameng@uga.edu)
+ * @brief Main source code of IPEA core
+ * @version 0.1
+ * @date 2023-08-28
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #include <stdio.h>
 #include <stddef.h>
 #include <sys/time.h>
@@ -145,21 +156,6 @@ static int _TraceDecode(const target_info_t *target_info, int exec_index, U8 *bi
 	return res;
 }
 
-/**
- * @brief 
- * 
- * @param target_info 
- * @param exec_index 
- * @param testcase 
- * @param size 
- * @param timeout 
- * @param exec_ms 
- * @param bitmap 
- * @param persist_mode 
- * @param profiling 
- * @param verbose 
- * @return int 
- */
 int IPEA_RunTarget(const target_info_t *target_info, 
 					int exec_index, 
 					U8 *testcase, 

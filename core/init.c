@@ -1,3 +1,13 @@
+/**
+ * @file init.c
+ * @author Jiameng Shi (jiameng@uga.edu)
+ * @brief Source code of J-Link module
+ * @version 0.1
+ * @date 2023-08-29
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -1,3 +1,13 @@
+/**
+ * @file trace.h
+ * @author Jiameng Shi (jiameng@uga.edu)
+ * @brief Definitions of trace packets
+ * @version 0.1
+ * @date 2023-08-29
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 #ifndef TRACE_H
 #define TRACE_H
 

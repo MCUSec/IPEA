@@ -1,3 +1,13 @@
+/**
+ * @file common.c
+ * @author Jiameng Shi (jiameng@uga.edu)
+ * @brief Callbacks for J-Link module
+ * @version 0.1
+ * @date 2023-08-29
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include "common.h"

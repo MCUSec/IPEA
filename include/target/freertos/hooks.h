@@ -1,3 +1,13 @@
+/**
+ * @file hooks.h
+ * @author Jiameng Shi (jiameng@uga.edu)
+ * @brief Hooks of FreeRTOS
+ * @version 0.1
+ * @date 2023-08-29
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 #ifndef __FREERTOS_HOOKS_H__
 #define __FREERTOS_HOOKS_H__
 

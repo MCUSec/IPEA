@@ -1,3 +1,13 @@
+/**
+ * @file libipeasan.c
+ * @author Jiameng Shi (jiameng@uga.edu)
+ * @brief Implementation of IPEA-San runtime library
+ * @version 0.1
+ * @date 2023-08-29
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 #include <stdbool.h>
 #include "libipeasan_conf.h"
 #include "RTT/SEGGER_RTT.h"

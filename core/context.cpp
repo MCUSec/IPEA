@@ -1,3 +1,13 @@
+/**
+ * @file context.cpp
+ * @author Jiameng Shi (jiameng@uga.edu)
+ * @brief Main source code of IPEA-San
+ * @version 0.1
+ * @date 2023-08-29
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 #include "context.hpp"
 
 #include <algorithm>
