@@ -1,5 +1,5 @@
 # IPEA
-
+[![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8296807.svg)](https://doi.org/10.5281/zenodo.8296807)
 
 This repo maintains the source code for NDSS paper entitiled "Facilitating Non-Intrusive In-Vivo Firmware Testing with Stateless Instrumentation".
