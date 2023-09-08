@@ -253,15 +253,6 @@ The runtime log would be saved as `tracelog_0.txt`. If a crash dected, the call 
 
 ## Artifact Evaluation
 
-We claim "**Avaliable**" and "**Functional**" badges in NDSS'24 AE. If the required hardware (e.g., J-Link Probe and evaluation board) is unavailable, please login to our AE server in which all software and hardware dependencies are in place for the evaluation:
-
-```bash
-$ ssh -X ndss24@24.199.78.229         # password: ndss24
-$ ssh -X -p 2222 ndss24_ae@localhost
-```
-
->*NOTE*: X11 forwarding must be enabled. Please don't omit `-X` parameter in the command lines. For Windows and Mac users, please refer to this [instruction](docs/x11.md).
-
 ### IPEA-San Evaluation
 
 `Toy` program accepts arbitrary strings. The input starting with the specific character will trigger different memory bugs:
