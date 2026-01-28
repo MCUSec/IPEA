@@ -1,0 +1,7 @@
+# Build artifacts
+build/
+compiler-rt/build/
+
+# MCU_ASAN outputs
+projects/MCU_ASAN/*.o
+projects/MCU_ASAN/*.a

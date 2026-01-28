@@ -27,15 +27,19 @@
 #include "llvm/Transforms/Utils/BasicBlockUtils.h"
 #include "llvm/Analysis/MemoryBuiltins.h"
 #include "llvm/IR/InlineAsm.h"
+#include "llvm/IR/PassManager.h"
 #include "llvm/ADT/SmallVector.h"
 #include "llvm/ADT/Statistic.h"
 #include "llvm/Analysis/GlobalsModRef.h"
 #include "llvm/Analysis/LoopPass.h"
 #include "llvm/Analysis/MemorySSA.h"
+#include "llvm/Analysis/TargetLibraryInfo.h"
 #include "llvm/Analysis/ValueTracking.h"
 #include "llvm/IR/Dominators.h"
 #include "llvm/IR/PatternMatch.h"
 #include "llvm/InitializePasses.h"
+#include "llvm/Passes/PassBuilder.h"
+#include "llvm/Passes/PassPlugin.h"
 #include "llvm/Transforms/Scalar.h"
 #include "llvm/Transforms/Scalar/LoopPassManager.h"
 #include "llvm/Transforms/Utils/LoopUtils.h"
@@ -49,6 +53,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <memory>
 #include <stdint.h>
 #include <stdlib.h>
 #include <set>
@@ -1028,7 +1033,7 @@ namespace{
                 auto BasePtr = CI->getOperand(OpOffset);
                 if (ignoreAccess(BasePtr))
                     return;
-                auto Ty = cast<PointerType>(BasePtr->getType())->getElementType();
+                Type *Ty = IsWrite ? CI->getOperand(0)->getType() : CI->getType();
                 MaybeAlign Alignment = Align(1);
                 // Otherwise no alignment guarantees. We probably got Undef.
                 if (auto *Op = dyn_cast<ConstantInt>(CI->getOperand(1 + OpOffset)))
@@ -1036,7 +1041,7 @@ namespace{
                     Value *Mask = CI->getOperand(2 + OpOffset);
                     Interesting.emplace_back(I, OpOffset, IsWrite, Ty, Alignment, Mask);
                 } else {
-                    for (unsigned ArgNo = 0; ArgNo < CI->getNumArgOperands(); ArgNo++) {
+                    for (unsigned ArgNo = 0; ArgNo < CI->arg_size(); ArgNo++) {
                         if (!CI->isByValArgument(ArgNo) ||
                             ignoreAccess(CI->getArgOperand(ArgNo)))
                         continue;
@@ -1045,6 +1050,51 @@ namespace{
                     }
                 }
             }
+            // } else if (auto *CB = dyn_cast<CallBase>(I)) {
+            //     auto *F = CB->getCalledFunction();
+
+            //     if (F && (F->getName().startswith("llvm.masked.load.") ||
+            //             F->getName().startswith("llvm.masked.store."))) {
+
+            //         bool IsWrite = F->getName().startswith("llvm.masked.store.");
+            //         // masked.store has: (value, ptr, align, mask)
+            //         // masked.load  has: (ptr, align, mask, passthru)
+            //         unsigned OpOffset = IsWrite ? 1 : 0;
+
+            //         Value *BasePtr = CB->getArgOperand(OpOffset);
+            //         if (ignoreAccess(BasePtr))
+            //             return;
+
+            //         // Opaque-pointer-friendly: derive accessed type from the intrinsic operands/result
+            //         Type *Ty = nullptr;
+            //         if (IsWrite) {
+            //             Ty = CB->getArgOperand(0)->getType();   // value being stored
+            //         } else {
+            //             Ty = CB->getType();                     // return type of masked.load
+            //         }
+
+            //         MaybeAlign Alignment = Align(1);
+            //         if (auto *Op = dyn_cast<ConstantInt>(CB->getArgOperand(1 + OpOffset)))
+            //             Alignment = Op->getMaybeAlignValue();
+
+            //         Value *Mask = CB->getArgOperand(2 + OpOffset);
+
+            //         // NOTE: InterestingMemoryOperand expects an operand index into I->getOperandUse().
+            //         // For CallBase, the args are operands in the same order, so OpOffset works.
+            //         Interesting.emplace_back(I, OpOffset, IsWrite, Ty, Alignment, Mask);
+            //         return;
+            //     }
+
+            //     // Handle byval args
+            //     for (unsigned ArgNo = 0; ArgNo < CB->arg_size(); ++ArgNo) {
+            //         if (!CB->isByValArgument(ArgNo) || ignoreAccess(CB->getArgOperand(ArgNo)))
+            //             continue;
+
+            //         Type *Ty = CB->getParamByValType(ArgNo);
+            //         Interesting.emplace_back(I, ArgNo, false, Ty, Align(1));
+            //     }
+            // }
+
         }
 
         bool GlobalIsLinkerInitialized(GlobalVariable *G) {
@@ -1262,7 +1312,8 @@ namespace{
             FunctionCallee F;
             Value *newCI;
             auto M = call_inst->getModule();
-            auto numOperands = call_inst->getNumArgOperands();
+            auto numOperands = call_inst->arg_size();
+            // auto numOperands = call_inst->arg_size();
             auto Int8PtrType = Type::getInt8PtrTy(M->getContext());
             auto wCharPtrType = Type::getInt32PtrTy(M->getContext());
 
@@ -1533,7 +1584,7 @@ namespace{
                         errs() << "}\n";
                     #endif
                     
-                    if(arg_value->getType()->isPointerTy() && !arg_value->getType()->getPointerElementType()->isFunctionTy()){
+                    if(isNonFunctionPointer(arg_value->getType())){
                         #if DEBUG_MODE
                             errs() << "arg is PointerType\n";
                         #endif
@@ -2114,6 +2165,15 @@ namespace{
 
             return false;
         }
+
+        bool isNonFunctionPointer(Type *Ty) {
+            auto *PT = dyn_cast<PointerType>(Ty);
+            if (!PT)
+                return false;
+            if (PT->isOpaque())
+                return true;
+            return !PT->getNonOpaquePointerElementType()->isFunctionTy();
+        }
         
         void gatherBaseBoundPass1(Function* func_ptr, std::vector<Instruction *> &insts, std::deque<std::function<void()>> &task_queue){
             #if DEBUG_MODE
@@ -2123,7 +2183,7 @@ namespace{
                 // don't process "char *argv[]" for main function
                 // function parameters
                 for(Function::arg_iterator arg_begin = func_ptr->arg_begin(), arg_end = func_ptr->arg_end(); arg_begin != arg_end; arg_begin++){
-                    if(!arg_begin->getType()->isPointerTy() || arg_begin->getType()->getPointerElementType()->isFunctionTy()){
+                    if(!isNonFunctionPointer(arg_begin->getType())){
                         continue;
                     }
                     #if DEBUG_MODE
@@ -2414,14 +2474,11 @@ namespace{
             for (j = subLoops.begin(), f = subLoops.end(); j != f; ++j)
                 getAllLoops(LoopVector, *j);
         }
-        void handleLoopTrans(Function* func){
+        void handleLoopTrans(LoopInfo &LI, ScalarEvolution &SE){
             #if DEBUG_MODE
                 errs() << "call handleLoopTrans\n";
             #endif
             SmallVector<Loop *, 16> LoopVector;
-            DominatorTree &DT = getAnalysis<DominatorTreeWrapperPass>().getDomTree();
-            ScalarEvolution &SE = getAnalysis<ScalarEvolutionWrapperPass>().getSE();
-            LoopInfo &LI = getAnalysis<LoopInfoWrapperPass>().getLoopInfo();
             for (Loop *L : LI){
                 #if DEBUG_MODE
                     errs() << "loop detected\n";
@@ -2489,14 +2546,11 @@ namespace{
                 } 
             }
         }
-        void handleLoopMem(){
+        void handleLoopMem(LoopInfo &LI, ScalarEvolution &SE){
             #if DEBUG_MODE
                 errs() << "call handleLoopMem\n";
             #endif
             SmallVector<Loop *, 16> LoopVector;
-            DominatorTree &DT = getAnalysis<DominatorTreeWrapperPass>().getDomTree();
-            ScalarEvolution &SE = getAnalysis<ScalarEvolutionWrapperPass>().getSE();
-            LoopInfo &LI = getAnalysis<LoopInfoWrapperPass>().getLoopInfo();
             for(Loop *L : LI){
                 #if DEBUG_MODE
                     errs() << "loop detected\n";
@@ -2917,7 +2971,7 @@ namespace{
             AU.addRequired<TargetLibraryInfoWrapperPass>();
         }
 
-        bool doInitialization(Module &M) override {
+        bool initializeModule(Module &M){
             if (ModuleFilted(M))
                 return false;
 
@@ -2946,10 +3000,14 @@ namespace{
                     }
                 }
             }
-            
+
             fin.close();
 
             return true;
+        }
+
+        bool doInitialization(Module &M) override {
+            return initializeModule(M);
         }
         
         bool doFinalization(Module &M) override{
@@ -2970,7 +3028,9 @@ namespace{
             #endif
             return true;
         }
-        bool runOnFunction(Function &F){
+
+        bool runOnFunctionImpl(Function &F, TargetLibraryInfo &FuncTLI,
+                               LoopInfo *LI, ScalarEvolution *SE){
             #if DEBUG_MODE
                 errs() << "Call runOnFunction\n";
             #endif
@@ -2978,7 +3038,7 @@ namespace{
             hasPtrArg = false;
             Module &module = *F.getParent();
             
-            TLI = &getAnalysis<TargetLibraryInfoWrapperPass>().getTLI(F);
+            TLI = &FuncTLI;
             mCachedId.clear();
             mCachedAddressId.clear();
             mTempId = -1;
@@ -3028,7 +3088,8 @@ namespace{
                 extendLifeTime(func_ptr);
                 #if ENABLE_LOOP_OPTIMIZATION
                     LoopNotInstrumentMem.clear();
-                    handleLoopMem();
+                    if (LI && SE)
+                        handleLoopMem(*LI, *SE);
                 #endif
              
                 for (auto &BB : F) {
@@ -3068,7 +3129,8 @@ namespace{
             #endif
             #if ENABLE_LOOP_OPTIMIZATION
                 LoopNotInstrumentTrans.clear();
-                handleLoopTrans(func_ptr);
+                if (LI && SE)
+                    handleLoopTrans(*LI, *SE);
             #endif
             #if ENABLE_AFL
                 insertRandom(func_ptr);
@@ -3112,6 +3174,48 @@ namespace{
             return true;
             
         }
+
+        bool runOnFunction(Function &F){
+            #if ENABLE_LOOP_OPTIMIZATION
+                LoopInfo &LI = getAnalysis<LoopInfoWrapperPass>().getLoopInfo();
+                ScalarEvolution &SE = getAnalysis<ScalarEvolutionWrapperPass>().getSE();
+                TargetLibraryInfo &FuncTLI = getAnalysis<TargetLibraryInfoWrapperPass>().getTLI(F);
+                return runOnFunctionImpl(F, FuncTLI, &LI, &SE);
+            #else
+                TargetLibraryInfo &FuncTLI = getAnalysis<TargetLibraryInfoWrapperPass>().getTLI(F);
+                return runOnFunctionImpl(F, FuncTLI, nullptr, nullptr);
+            #endif
+        }
+    };
+
+    struct IPEASanPass : public PassInfoMixin<IPEASanPass> {
+        struct State {
+            IPEASan LegacyImpl;
+            const Module *InitializedModule = nullptr;
+        };
+
+        std::shared_ptr<State> S;
+
+        IPEASanPass() : S(std::make_shared<State>()) {}
+
+        PreservedAnalyses run(Function &F, FunctionAnalysisManager &FAM) {
+            Module &M = *F.getParent();
+            if (S->InitializedModule != &M) {
+                S->LegacyImpl.initializeModule(M);
+                S->InitializedModule = &M;
+            }
+
+            TargetLibraryInfo &FuncTLI = FAM.getResult<TargetLibraryAnalysis>(F);
+            #if ENABLE_LOOP_OPTIMIZATION
+                LoopInfo &LI = FAM.getResult<LoopAnalysis>(F);
+                ScalarEvolution &SE = FAM.getResult<ScalarEvolutionAnalysis>(F);
+                bool Changed = S->LegacyImpl.runOnFunctionImpl(F, FuncTLI, &LI, &SE);
+            #else
+                bool Changed = S->LegacyImpl.runOnFunctionImpl(F, FuncTLI, nullptr, nullptr);
+            #endif
+
+            return Changed ? PreservedAnalyses::none() : PreservedAnalyses::all();
+        }
     };
 }
 
@@ -3127,3 +3231,42 @@ static RegisterStandardPasses Z(
     PassManagerBuilder::EP_EnabledOnOptLevel0,
     [](const PassManagerBuilder &Builder,
        legacy::PassManagerBase &PM) { PM.add(new IPEASan()); });
+
+extern "C" LLVM_ATTRIBUTE_WEAK ::llvm::PassPluginLibraryInfo
+llvmGetPassPluginInfo() {
+  return {
+      LLVM_PLUGIN_API_VERSION, "ipeasan", LLVM_VERSION_STRING,
+      [](PassBuilder &PB) {
+        // Keep this so opt works with: -passes=ipeasan
+        PB.registerPipelineParsingCallback(
+            [](StringRef Name, FunctionPassManager &FPM,
+               ArrayRef<PassBuilder::PipelineElement>) {
+              if (Name == "ipeasan") {
+                FPM.addPass(IPEASanPass());
+                return true;
+              }
+              return false;
+            });
+
+        // NEW: make clang run the pass automatically when optimizing
+        // (so you only need: -fpass-plugin=/path/to/ipea-san.so -O1 ...)
+        PB.registerOptimizerLastEPCallback(
+            [](ModulePassManager &MPM, OptimizationLevel) {
+            FunctionPassManager FPM;
+            FPM.addPass(IPEASanPass());
+            MPM.addPass(createModuleToFunctionPassAdaptor(std::move(FPM)));
+            });
+
+        // Optional: also run at -O0 if you compile with -O0 sometimes.
+        // Clang's optimizer pipeline is minimal at -O0, so this helps.
+        PB.registerPipelineStartEPCallback(
+            [](ModulePassManager &MPM, OptimizationLevel Level) {
+              if (Level == OptimizationLevel::O0) {
+                FunctionPassManager FPM;
+                FPM.addPass(IPEASanPass());
+                MPM.addPass(createModuleToFunctionPassAdaptor(std::move(FPM)));
+              }
+            });
+      }};
+}
+

@@ -5,6 +5,14 @@ add_library(
 	${IPEA_SRCS}
 )
 
+find_package(fmt REQUIRED)
+
+target_link_libraries(IPEA
+  PUBLIC
+    fmt::fmt
+)
+
+
 target_compile_definitions(IPEA PRIVATE
 	-DTARGET_ENABLE_FUZZ
 	-DENABLE_SANITIZER

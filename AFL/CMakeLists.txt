@@ -27,8 +27,11 @@ target_compile_definitions(${AFL_AS} PRIVATE BIN_PATH="/usr/bin")
 
 # target_link_options(${AFL_EXEC} PRIVATE -fsanitize=address)
 
+find_package(fmt REQUIRED)
+
 target_link_libraries(${AFL_EXEC} PRIVATE 
 	IPEA
+	fmt::fmt
 	jlinkarm
 	pthread
 	stdc++
